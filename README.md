@@ -38,6 +38,8 @@ Next, we'll round out what she knows and let her route calls to the right person
 
 For the first two weeks, Grok Bot runs a review every weekday at 7 AM. It reads the emails, scores every transcript, and checks that the agent is Live, its number is attached and there's credit left (it warns us under $5, or on a weekday with no calls). It drafts fixes, and nothing changes without my OK. We don't have results from real callers yet, and we won't claim any until we do.
 
+**Proving it worked cost almost nothing.** We started with $10 of xAI credit, built Tess, got a free test number, and made our first five real phone test calls. The console showed $0.37 of usage for all of them. We didn't connect our real business line, buy any equipment or hire anyone to set it up until those tests passed.
+
 ## What we'll measure
 
 "The AI answered" is activity, not an outcome. The outcome is whether the caller got what they needed, or whether the team completed the follow-up. After the first few weeks of real calls, we plan to publish a small, anonymized results report:
@@ -51,6 +53,7 @@ No caller names, numbers or call content, and no figures until we have real ones
 
 ## Guidelines
 
+- **Test cheaply before you trust it.** Build the receptionist, call it yourself on the free test number, try to break it, test the urgent alert, and only then let it touch your real phone line.
 - One email policy, one recipient (`<team inbox>`), at most one successful email per call: an urgent call gets one `URGENT: <Location>` email; a non-urgent call that produces a message gets one `Message: <Location>` email; spam, wrong numbers and answer-only calls get none. A second try happens only if the first send fails. The one-recipient rule lives in the prompt (see [Known limits](#known-limits)). The provider's post-call summary email remains separate.
 - On an urgent call, the receptionist says "I've marked this urgent" and says the team has been alerted only after the email actually sends. If it fails twice, it never says the message is saved or that the team will see it. It says: "I wasn't able to send your message to the team just now, so I can't confirm they've received it. I'm sorry about that." Then it points anyone in danger to 911 and offers an approved alternative if you set one, or asks the caller to call back during front desk hours or the next business day. Message emails get the same honesty. The daily call review catches urgent calls with no matching URGENT email.
 - Follow-up wording depends on the time: "as soon as someone is free" during open hours, "the next business day" after hours. During open hours it never tells callers you're closed.
@@ -71,7 +74,7 @@ Answering Machina packages everything we learned into a kit you can reuse for yo
 
 ## What it costs
 
-**Our early number:** we started with $10 of xAI credit and have about $9 left after a day of building and testing, including several short real phone calls and browser test sessions. An earlier console snapshot showed $0.37 of usage for 5 short real calls plus some browser sessions, which is less than the per-minute rate below would predict. We haven't reconciled the two, so budget from the published rate.
+**Our early number:** our first five real phone test calls, on the free xAI number, cost **$0.37 total** out of $10 of starter credit. That's what we saw, not a rate. It's lower than xAI's published $0.09 a minute would predict, and we haven't worked out why, so budget from the published rate. After a full day of building and testing, including browser test sessions, we had about $9 of the $10 left.
 
 **xAI's published rate:** $0.08 per minute of audio, plus $0.01 per minute on the free phone number ([xAI pricing](https://docs.x.ai/developers/pricing), [Voice Agent Builder announcement](https://x.ai/news/grok-voice-agent-builder)). That's $0.18 for a 2-minute call and $0.27 for a 3-minute call. For more detail and what we haven't verified, see [Cost details](#cost-details).
 
