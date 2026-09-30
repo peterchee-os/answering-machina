@@ -4,6 +4,8 @@
 
 *From Peter Chee, founder of **Thinkspace**, a coworking and virtual office business in Redmond and Seattle, WA.*
 
+[![Add Answering Machina to Grok Bot](https://img.shields.io/badge/Add_Answering_Machina-to_Grok_Bot-black?style=for-the-badge)](https://x.ai/bot/FUSB3whX23EEO5aiyTk0P)
+
 > **v0.1, early release:** running on one real business line so far; test on the free xAI number and complete the [go-live checklist](docs/go-live-checklist.md) before you route yours (see [Known limits](#known-limits)).
 
 ## Why we built this
@@ -113,7 +115,7 @@ More technical detail is under [Limitations](#limitations).
 
 ## Quick start
 
-1. **Add Answering Machina to Grok Bot and answer its questions.** The one-click Grok Bot template isn't published yet. Until it is, give Grok Bot the seven playbooks in [`skills/`](skills/) and ask it to run **getting-started**. It asks one question at a time: your hours and locations, your phone system, what counts as urgent, where alerts go, and the exact recording notice you want.
+1. **Add Answering Machina to Grok Bot and answer its questions.** [Add the template](https://x.ai/bot/FUSB3whX23EEO5aiyTk0P) and it starts the interview on its own. (You can also give Grok Bot the seven playbooks in [`skills/`](skills/) and ask it to run **getting-started**.) It asks one question at a time: your hours and locations, your phone system, what counts as urgent, where alerts go, and the exact recording notice you want.
 2. **Review its drafts, then let it build and test.** It writes the script, guardrails and knowledge base for you to check. Then it builds the agent in [console.x.ai](https://console.x.ai) while you're signed in, and you run the test script from your cell on the free xAI test number. **This step is required:** don't route a real line until the tests pass and the [go-live checklist](docs/go-live-checklist.md) is complete.
 3. **Turn it on when you're ready.** It checks your phone system without changing anything, writes a routing plan with a rollback, and makes the change only when you say so. We recommend starting with after hours and adding daytime overflow once you trust it.
 
@@ -174,7 +176,7 @@ CHANGELOG.md release notes
 ```
 
 ## Setup with Grok Bot, step by step
-1. **Interview** (**getting-started**). Add the playbooks in [`skills/`](skills/) to Grok Bot (or import the template once it's published). The bot asks one question at a time about key facts, your phone system, urgent calls, the team inbox for alerts and messages, and the recording sentence.
+1. **Interview** (**getting-started**). [Add the Grok Bot template](https://x.ai/bot/FUSB3whX23EEO5aiyTk0P), or give Grok Bot the playbooks in [`skills/`](skills/). The bot asks one question at a time about key facts, your phone system, urgent calls, the team inbox for alerts and messages, and the recording sentence.
 2. **Drafts** (**receptionist-design**). It writes the Instructions, guardrails, KB and test script in a folder on its computer for you to review.
 3. **Console build** (**voice-agent-setup**). You sign in to [console.x.ai](https://console.x.ai) in the bot's browser. The bot takes a screenshot before and after each change and asks your OK before each live step. You do every sign-in yourself; it never handles keys or passwords.
 4. **Phone test (required).** Call the free xAI test number from your cell and run the whole test script before routing any real line. Check urgent alerts, message emails and post-call emails with real phone calls, and complete the [go-live checklist](docs/go-live-checklist.md).

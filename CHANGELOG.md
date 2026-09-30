@@ -6,6 +6,7 @@ All notable changes to Answering Machina are listed here.
 
 Fixes from a second outside review. Not tagged or released yet.
 
+- The Grok Bot template is published: the README now has an "Add Answering Machina to Grok Bot" button (https://x.ai/bot/FUSB3whX23EEO5aiyTk0P), and Quick start and Setup point to it first.
 - Honest failure wording: after two failed sends, the agent says "I wasn't able to send your message to the team just now, so I can't confirm they've received it. I'm sorry about that." It no longer says the message is saved or that the team will see it. Then 911 for any danger, then `<approved alternative, if any>` (replaces `<fallback phone number>`), otherwise a request to call back during front desk hours or the next business day. The same applies to Message emails: "the team will follow up" or "passed along" only after a successful send.
 - No-deals wording is now "I'm not able to arrange that, but I can take a message for the team," so it doesn't promise a hand-off before the email has sent.
 - Security wording: removed the claim that the worst case is an unwanted email to your own team inbox. The one-recipient rule is prompt-level only unless an independent allowlist is configured and verified; send-only access limits actions, not recipients. Added a future hardening note (prefer an alert tool with a fixed destination) and a Known limits entry. The agent now refuses requests to email any other address.
