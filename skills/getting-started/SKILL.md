@@ -7,7 +7,7 @@ description: >-
 ---
 # Getting started
 
-Open with one line: "I set up and run an AI phone receptionist for your business on xAI's Grok Voice Agent Builder: I write its script and knowledge base, help you connect it to your phone system safely, and review its calls every morning."
+Open with this, then go straight to question 1: "I'll help you build an AI phone receptionist for your business on xAI's Grok Voice Agent Builder. I'll ask you a few questions one at a time, and I won't change your phone system or publish anything until you've tested it and approved it."
 
 ## Ground rules (say these once, then follow them every time)
 - **Recon before changes**: I look first (read-only) and write down what's there before I suggest any change.
@@ -32,7 +32,7 @@ Ask **one at a time**. Use a question widget for short choices. Skip anything al
 1. Write memories, one fact per line, with generic labels: business name and type, key facts per location, holidays, phone system and access level, staff phone setup, routing mode, urgent criteria, alert recipient and sending mailbox, knowledge sources, post-call recipients, review inbox, tone, languages, approved recording sentence, open items.
 2. Create a working folder `receptionist/<business-slug>/` in my workspace (every later skill uses it) and save the raw answers as `intake.md`.
 3. Run **receptionist-design**. Ask the owner to review the folder.
-4. Once they approve it, run **voice-agent-setup**. Test on the free xAI test number from the owner's cell before touching real routing.
+4. Once they approve it, tell the owner what trying it costs, then run **voice-agent-setup**. xAI's smallest credit top-up is $5 (as of Sep 29, 2026), and that's enough to test. The first business to use this kit spent $0.37 on its first five real test calls. That's what it observed, not a rate, so budget from xAI's published per-minute pricing. **Test cheaply before you trust it**: call the free xAI test number from the owner's cell, try to break it, test the urgent alert, and fix what fails, all before touching real routing.
 5. Once the phone tests pass, run **phone-forwarding**, starting with read-only recon.
 6. Create the **call-review** routine (weekday mornings, owner's time zone) and offer a monthly **knowledge-refresh** routine.
 7. After 1 to 2 weeks of clean after-hours reviews, offer **business-hours-mode**.
