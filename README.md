@@ -12,8 +12,8 @@ Our front desk is small, and the phone is only one part of the job. The same peo
 
 We knew some calls were going unanswered. We didn't know how many, so we pulled nine months of records from our phone system. Here's what our two main lines showed for **Jan 1 – Sep 29, 2026**:
 
-- **328 of 2,138 real inbound calls went unanswered.** That's about 15%, roughly 1 call in 7, or 1.2 a day.
-- **About two-thirds of those happened during business hours**, when whoever was at the desk was already helping someone in person, giving a tour or handling a delivery.
+- **328 of 2,138 real inbound calls went unanswered.** That's about 15%, roughly 1 call in 6 or 7, or 1.2 a day.
+- **About two-thirds of those happened during business hours**, and in most of them no desk phone was on another call. The records can't show why, but it fits a desk where whoever is on duty is often helping someone in person, giving a tour or handling a delivery.
 - **After-hours misses cluster right around closing and opening:** 4–6 PM and 6–8 AM. Late nights and weekends were rare.
 - **63% of callers who reached voicemail hung up without leaving a message.** For most people, voicemail is a dead end.
 - **About 30% of missed calls were followed by the same caller trying again within a day.** These are real people who need something.
@@ -24,23 +24,38 @@ Getting to those numbers took some cleanup. Almost half of the raw phone records
 
 We built **Tess**, an AI receptionist, on xAI's [Grok Voice Agent Builder](https://x.ai/news/grok-voice-agent-builder), and we did it in one day with Grok Bot. Grok Bot interviewed me about the business, drafted Tess's script and knowledge base, and built the agent in the xAI console while I watched. Then it tested her on a free phone number, well away from our real lines.
 
-Tess now answers our Redmond main line in two ways. After hours, she's the first to pick up. During the day, if the desk doesn't answer within about 4 rings, the call goes to Tess instead of voicemail. It's one agent with a time-aware prompt: she checks the time, and during the day she says the team is busy helping others instead of saying we're closed. She:
-- gives our hours, directions and parking,
-- takes a message, spelling the caller's name back and reading their number back, and emails it to our team right away,
-- sends an urgent alert when a call can't wait, like a member locked out of the building,
+Tess now answers our Redmond main line in two ways. Our phone system decides when she gets a call and forwards it to her free xAI number. After hours and on the holidays listed in our phone system, she's the first to pick up. During open hours (Monday to Friday, 8 AM to 4 PM), calls ring the front desk for about 20 seconds (roughly 4 rings), and if nobody picks up, the call goes to Tess instead of voicemail. It's one agent, not a separate daytime agent, with a time-aware prompt and a greeting that works at any hour: she checks the time, and during the day she says the team is busy helping others instead of saying we're closed. She:
+- answers questions about our hours, directions and parking, and takes a message for everything else, pricing included,
+- takes a message, spelling the caller's name back and reading their number back, and emails it to our team inbox right away,
+- sends an urgent alert email when a call can't wait, like a member locked out of the building, and says the team has been alerted only after that email actually sends,
 - tells anyone in danger to hang up and dial 911.
 
-Next, we'll round out what she knows and let her route calls to the right person.
+She doesn't transfer calls yet.
 
-**Where it stands:** Tess passed end-to-end phone tests on 2026-09-29, and the urgent alert and the post-call email both arrived. That same night she went live on our Redmond main line after hours. We also turned on daytime backup that first night. That was my call as the owner, and it's sooner than this kit recommends (run after hours only for a week or two first). To make it work with one agent, we changed her prompt to check the time and adjust its wording. As of 2026-09-29, we haven't placed a daytime test call on the live line yet. We made each routing change only with an owner's OK and a written rollback plan. We don't have results from real callers yet, and we won't claim any until we do.
+Next, we'll round out what she knows and let her route calls to the right person. A second location is being prepared.
+
+**Where it stands (as of 2026-09-29, 10 PM PT):** Tess passed end-to-end phone tests on her free xAI number on 2026-09-29, and the urgent alert and the post-call email both arrived. That same night she went live on our Redmond main line after hours, and a real test call to the main line after hours reached her. We also turned on daytime backup that first night. That was my call as the owner, and it's sooner than this kit recommends (run after hours only for a week or two first). To make it work with one agent, we changed her prompt to check the time and adjust its wording. The daytime path is configured, but we haven't verified it with a real call yet; that test is planned for the morning of 2026-09-30. We made each routing change only with an owner's OK and a written rollback plan.
+
+For the first two weeks, Grok Bot runs a review every weekday at 7 AM. It reads the emails, scores every transcript, and checks that the agent is Live, its number is attached and there's credit left (it warns us under $5, or on a weekday with no calls). It drafts fixes, and nothing changes without my OK. We don't have results from real callers yet, and we won't claim any until we do.
+
+## What we'll measure
+
+"The AI answered" is activity, not an outcome. The outcome is whether the caller got what they needed, or whether the team completed the follow-up. After the first few weeks of real calls, we plan to publish a small, anonymized results report:
+- calls the receptionist handled,
+- how many ended with a useful answer or an actionable message,
+- urgent alerts: how many sent successfully,
+- how many messages led to a completed follow-up,
+- the real cost, and the time we spent reviewing calls.
+
+No caller names, numbers or call content, and no figures until we have real ones.
 
 ## Guidelines
 
-- One email policy, one recipient (`<team inbox>`), at most one email per call: an urgent call gets exactly one `URGENT: <Location>` email; a non-urgent call that produces a message gets exactly one `Message: <Location>` email; spam, wrong numbers and answer-only calls get none. The provider's post-call summary email remains separate.
-- On an urgent call, the receptionist says "I've marked this urgent" and says the team has been alerted only after the email actually sends. If it fails twice, it says so plainly, points anyone in danger to 911, and otherwise offers a fallback number (if you set one) or says the message is saved. The daily call review catches urgent calls with no matching URGENT email.
+- One email policy, one recipient (`<team inbox>`), at most one successful email per call: an urgent call gets one `URGENT: <Location>` email; a non-urgent call that produces a message gets one `Message: <Location>` email; spam, wrong numbers and answer-only calls get none. A second try happens only if the first send fails. The one-recipient rule lives in the prompt (see [Known limits](#known-limits)). The provider's post-call summary email remains separate.
+- On an urgent call, the receptionist says "I've marked this urgent" and says the team has been alerted only after the email actually sends. If it fails twice, it never says the message is saved or that the team will see it. It says: "I wasn't able to send your message to the team just now, so I can't confirm they've received it. I'm sorry about that." Then it points anyone in danger to 911 and offers an approved alternative if you set one, or asks the caller to call back during front desk hours or the next business day. Message emails get the same honesty. The daily call review catches urgent calls with no matching URGENT email.
 - Follow-up wording depends on the time: "as soon as someone is free" during open hours, "the next business day" after hours. During open hours it never tells callers you're closed.
 - Difficult callers are handled calmly: profanity may get one warning, sexual or harassing language ends the call without a message, threats trigger 911 guidance plus an urgent alert, and self-harm gets 988/911 guidance, an urgent alert and no premature hang-up. Never argue, judge or repeat the caller's words. 988 is US-only.
-- No deals or freebies: do not agree, refuse or hint at free or discounted space, rooms, trials, waived fees, special rates or other deals, even if the caller insists or claims a promise. Say "I'm not able to arrange that, but I'll pass it along to the team," take a message including the request, and never book, hold, reserve or grant access.
+- No deals or freebies: do not agree, refuse or hint at free or discounted space, rooms, trials, waived fees, special rates or other deals, even if the caller insists or claims a promise. Say "I'm not able to arrange that, but I can take a message for the team," take a message including the request, and never book, hold, reserve or grant access.
 
 See [`templates/prompt.md`](templates/prompt.md), [`templates/guardrails.md`](templates/guardrails.md) and [`templates/alerts.md`](templates/alerts.md) for the full rules.
 
@@ -49,14 +64,14 @@ See [`templates/prompt.md`](templates/prompt.md), [`templates/guardrails.md`](te
 Answering Machina packages everything we learned into a kit you can reuse for your own business:
 
 - **Callers get an answer instead of voicemail.** They hear your hours, directions and parking, or leave a properly taken message.
-- **Urgent calls reach you right away**, as one short email to the address you pick.
+- **Messages and urgent calls reach you right away**, as one short email to the team inbox you pick.
 - **Your phone system stays in charge.** The AI only gets the calls you route to it, and your routing changes only when you say so.
-- **Every call can be reviewed.** Each call triggers a post-call email and leaves a full transcript in the xAI console, and Grok Bot can review those every weekday morning.
+- **Every call can be reviewed.** Every call leaves a recording and transcript in the xAI console (kept 30 days), and each phone call that lasts at least the minimum you set triggers a metadata-only "Call completed" email. Grok Bot can review them every weekday morning.
 - **It's cheap to run.** At xAI's published rates, a call on the free number costs about 9 cents a minute (see [What it costs](#what-it-costs)).
 
 ## What it costs
 
-**Our early number:** under 10 cents a call so far, in early testing. Over 30 days, the xAI console showed $0.37 of usage for 5 short real calls plus some browser test sessions. We haven't reconciled that against the per-minute rate below yet, so budget from the published rate.
+**Our early number:** we started with $10 of xAI credit and have about $9 left after a day of building and testing, including several short real phone calls and browser test sessions. An earlier console snapshot showed $0.37 of usage for 5 short real calls plus some browser sessions, which is less than the per-minute rate below would predict. We haven't reconciled the two, so budget from the published rate.
 
 **xAI's published rate:** $0.08 per minute of audio, plus $0.01 per minute on the free phone number ([xAI pricing](https://docs.x.ai/developers/pricing), [Voice Agent Builder announcement](https://x.ai/news/grok-voice-agent-builder)). That's $0.18 for a 2-minute call and $0.27 for a 3-minute call. For more detail and what we haven't verified, see [Cost details](#cost-details).
 
@@ -88,7 +103,8 @@ Prices change, so check the links before you decide. These services set things u
 - **Answers only from its knowledge base** (the Key facts block plus the uploaded files). Everything else becomes a message.
 - **A call can fail silently if your xAI credit runs out.** Turn on auto top-up in the xAI console's billing settings, or set up a low-credit check, and do the daily health check in the [go-live checklist](docs/go-live-checklist.md).
 - **Post-call emails from xAI carry no transcript** (and no summary). Transcripts stay in the console for 30 days.
-- **Results from real callers aren't published yet.**
+- **Recipient restriction is prompt-level only.** The Instructions tell the agent to email only your team inbox. Send-only access limits which actions the agent has, but not who it sends to. Unless you configure and verify an independent recipient allowlist, a persuasive caller or a model mistake could get an email sent to another address. A fixed-destination alert tool (a webhook, or a sending account that can only reach one address) is the better design; see the Risk section in [templates/alerts.md](templates/alerts.md#risk).
+- **Results from real callers aren't published yet.** See [What we'll measure](#what-well-measure).
 
 More technical detail is under [Limitations](#limitations).
 
@@ -108,7 +124,7 @@ No Grok Bot? Everything works by hand too. See [Manual use](#manual-use-without-
 - People setting this up for a client who want a repeatable, reviewable process.
 
 ## How it works
-Your phone system stays in charge and sends calls to the AI **only** when you tell it to: after hours at first, and later as daytime overflow, either to the same time-aware agent or to a separate daytime agent. The agent answers from a short **Key facts** block plus a small knowledge base, takes messages, and never transfers after hours. For urgent calls, it sends one short email through a send-only Gmail connector. xAI sends a metadata-only "Call completed" email for every phone call, and the full transcript lives in the console.
+Your phone system stays in charge and sends calls to the AI **only** when you tell it to: after hours at first, and later as daytime overflow, either to the same time-aware agent or to a separate daytime agent. The agent answers from a short **Key facts** block plus a small knowledge base, takes messages, and never transfers after hours. For each message or urgent call, it sends one short email to your team inbox through a send-only Gmail connector. xAI sends a metadata-only "Call completed" email for each phone call that lasts at least the minimum duration you set, and the full transcript lives in the console.
 
 ### Call flow
 ```mermaid
@@ -120,8 +136,8 @@ flowchart TD
     B -- "After hours / holiday" --> E["AI receptionist answers<br/>greeting + recording notice"]
     E --> F{What does the caller need?}
     F -- "Hours, directions, parking" --> G["Answer from Key facts<br/>then the knowledge base"]
-    F -- "Anything else" --> H["Take a message<br/>spell name back, read number back"]
-    F -- "Urgent: lockout, leak, outage" --> I["Urgent message<br/>flagged urgent, team alerted"]
+    F -- "Anything else" --> H["Take a message<br/>spell name back, read number back<br/>Message email to the team"]
+    F -- "Urgent: lockout, leak, outage" --> I["Urgent message<br/>URGENT email; 'alerted'<br/>only if it sent"]
     F -- "Danger: fire, medical, crime" --> J["'Please hang up and dial 911 now.'"]
     G --> K["Recap, anything else?, end call"]
     H --> K
@@ -131,8 +147,8 @@ flowchart TD
 ### Alert and review path
 ```mermaid
 flowchart LR
-    I[Urgent call] -->|"gmail_send_message<br/>send-only connector"| M[Dedicated sending mailbox]
-    M -->|"one email: URGENT: Location<br/>under 300 characters"| G["Alert address<br/>group is fine"]
+    I[Urgent call or message] -->|"gmail_send_message<br/>send-only connector"| M[Dedicated sending mailbox]
+    M -->|"one email: URGENT or Message<br/>under 300 characters"| G["Team inbox<br/>group is fine"]
     G --> T[Team phones / inboxes]
     X[Every phone call ends] -->|"noreply@x.ai<br/>Call completed: agent, duration"| P["Up to 3 recipients<br/>metadata + link only"]
     X --> C["Console Conversations<br/>recording, transcript, tool calls,<br/>evaluation, kept 30 days"]
@@ -160,7 +176,7 @@ CHANGELOG.md release notes
 3. **Console build** (**voice-agent-setup**). You sign in to [console.x.ai](https://console.x.ai) in the bot's browser. The bot takes a screenshot before and after each change and asks your OK before each live step. You do every sign-in yourself; it never handles keys or passwords.
 4. **Phone test (required).** Call the free xAI test number from your cell and run the whole test script before routing any real line. Check urgent alerts, message emails and post-call emails with real phone calls, and complete the [go-live checklist](docs/go-live-checklist.md).
 5. **Routing** (**phone-forwarding**). The bot reviews your phone system read-only, writes a routing plan with a rollback, and makes the after-hours change only when you say so.
-6. **Ongoing** (**call-review**, **knowledge-refresh**). It reviews calls every weekday morning and keeps the knowledge current. It also does a daily health check (a known test call, or at least confirming the agent is Live and has credit). After 1 to 2 weeks, you can add daytime overflow (**business-hours-mode**): the same time-aware agent, or a separate daytime agent.
+6. **Ongoing** (**call-review**, **knowledge-refresh**). It reviews calls every weekday morning and keeps the knowledge current. It also does a daily health check (a known test call, or at least confirming the agent is Live, its number is attached and it has credit). After 1 to 2 weeks, you can add daytime overflow (**business-hours-mode**): the same time-aware agent, or a separate daytime agent.
 
 ## Manual use (without Grok Bot)
 1. Copy `templates/` to a new folder and fill in `intake.md`.
@@ -193,10 +209,10 @@ Checked against xAI's published pages on 2026-09-29. Check the current [xAI pric
 - **No schedule in the agent.** Your phone system decides when calls reach it. A time-aware prompt only changes what the agent says.
 - **Post-call email is metadata only**, with no summary or urgency flag. Details stay in Conversations for 30 days.
 - **Urgent alerts depend on the agent** classifying the call correctly and on the Gmail connector staying signed in. Test them with real phone calls and review daily.
-- **Send-only still means the agent can send email.** Anyone who can talk to the agent can trigger its enabled tools. That's why the connector is send-only and the Instructions name a single recipient.
+- **Send-only still means the agent can send email, and it limits actions, not recipients.** Anyone who can talk to the agent can trigger its enabled tools. The connector is send-only so the agent can't read, forward or delete mail, and the Instructions name a single recipient, but that recipient rule is prompt-level only unless you add an independent, verified allowlist or a fixed-destination alert tool.
 - **Knowledge search can miss facts**, so the basics go in the Key facts block.
 - **At most 10 console guardrails.** Extra rules go in the Instructions.
-- **Transfers are cold** (unannounced), and they're off after hours by design.
+- **Transfers, if you add them, are cold** (unannounced). We haven't tested them, and they're off after hours by design.
 - **Configuration is by hand.** We didn't see any export or config API, so keep your files and screenshots.
 - **"Try it live" needs a microphone** and doesn't send post-call emails.
 - Free provisioned numbers are released after 30 days without calls, according to the console.

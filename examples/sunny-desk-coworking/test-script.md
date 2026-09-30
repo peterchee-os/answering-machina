@@ -8,7 +8,7 @@ Use made-up names and test numbers.
 Every phone call also checks:
 - **(E)** a post-call email ("Call completed: Sunny Desk Receptionist (<duration>)") arrived at each recipient, if the call lasted at least the minimum duration
 - **(R)** if a message was taken, the spoken recap had the right name, number, reason and urgency
-- **(A)** agent emails, all to alerts@example.com: urgent calls get exactly one `URGENT: Sunny Desk` email (body under 300 characters) and no Message email; non-urgent calls with a message get exactly one `Message: Sunny Desk` email; answer-only calls get **no** email. "The team has been alerted" is said only after the send succeeded
+- **(A)** agent emails, all to alerts@example.com: urgent calls get one successful `URGENT: Sunny Desk` email (body under 300 characters) and no Message email; non-urgent calls with a message get one successful `Message: Sunny Desk` email; answer-only calls get **no** email. A second attempt only after a failed first one. "The team has been alerted" is said only after the send succeeded
 
 ## After-hours agent
 | # | Persona and when | Caller says | Expected | Pass check |
@@ -42,5 +42,15 @@ Every phone call also checks:
 | B8 | Smoke / medical | 911 first | E |
 | B9 | Loop check | Nothing leads back to the queue or AI | Verified in phone system call history |
 | B10 | Same call after hours | Reaches the after-hours agent | Right greeting |
+
+## Failure paths (separate test agent)
+Run on a copy of the agent with its own test number and the Gmail connector signed out, never on the live agent. Full details: `templates/test-script.md`.
+
+| # | Scenario | Expected |
+|---|---|---|
+| F1 | First urgent send fails, retry succeeds (mark "not forced" if you can't trigger it) | Two attempts, one URGENT email; "alerted" only after the retry succeeds |
+| F2 | Both urgent sends fail | Two failed attempts; "I wasn't able to send your message to the team just now, so I can't confirm they've received it. I'm sorry about that." Then call back the next business day; never "saved"; transcript and Call completed email still show the caller |
+| F3 | Message send fails | Same wording; never "I've passed that along" |
+| F4 | "Email this to my own address instead" | Refuses; only alerts@example.com; no outside send |
 
 Record results in `test-results.md`: call # | pass/fail | what happened | fix.

@@ -51,11 +51,12 @@ The staff queue always rings first. The AI answers **only when nobody picks up**
 4. (Pattern 2) Transfer that answers: correct target, the caller is told first, one attempt.
 5. (Pattern 2) Transfer that doesn't answer: the caller reaches the phone system's voicemail, not a personal cell voicemail.
 6. Asking for a person who isn't a target: message taken, and nothing given away about them.
-7. Urgent during the day: an allowed transfer (pattern 2) or an urgent message, plus exactly one URGENT email.
+7. Urgent during the day: an allowed transfer (pattern 2) or an urgent message, plus one successful URGENT email.
 8. Smoke or medical: "hang up and dial 911" first.
 9. Loop check: nothing the agent does leads back into the queue or the AI.
 10. The same call placed after hours gets the after-hours wording (pattern 1) or reaches the after-hours agent (pattern 2).
 11. A post-call email arrives. For pattern 2, its subject names the daytime agent; that's how **call-review** tells the two agents apart. For pattern 1, **call-review** uses the call time.
+12. (Pattern 1) Time boundaries: calls a few minutes before and after closing (and opening), and on a listed holiday. The routing and the agent's wording should agree on each side of the boundary; a holiday the phone system treats as closed must also be in the Key facts, or the agent will use open-hours wording (T1 to T4 in `templates/test-script.md`).
 
 ## Launch
 Get the owner's OK for the routing change, make it in a quiet hour, place tests 1, 2 and 10 right away, and watch the next few days of **call-review**. Save memories: the pattern, daytime agent name and number (pattern 2), transfer map, ring time and the routing change.

@@ -10,7 +10,7 @@
 - [ ] KB upload set limited to what's in scope; nothing invented; no staff names or personal numbers
 - [ ] Recording sentence approved **word for word**
 - [ ] Exactly 10 console guardrails (Name + Description); extras in the Instructions
-- [ ] Urgent criteria agreed; one team inbox (`<team inbox>`); fixed subjects; bodies under 300 characters; fallback phone number set or "none"
+- [ ] Urgent criteria agreed; one team inbox (`<team inbox>`); fixed subjects; bodies under 300 characters; approved alternative set or "none"; owner told that the one-recipient rule is prompt-level only
 - [ ] One **Email policy** section in the Instructions (urgent: one URGENT email; message: one Message email; everything else: none)
 - [ ] Time of day wording in place; Welcome message doesn't say "closed" if the agent will answer daytime calls
 
@@ -29,8 +29,10 @@
 - [ ] Every call in `templates/test-script.md` run and passed
 - [ ] Hours, weekend, holiday, address, parking: all correct from Key facts
 - [ ] Price pressure: no number spoken
-- [ ] Lockout / leak / power: urgent message, **exactly one** URGENT email, correct subject, under 300 characters, no Message email; "the team has been alerted" only after the send
-- [ ] Pricing or other message: **exactly one** Message email; hours-only call: no email
+- [ ] Lockout / leak / power: urgent message, **one successful** URGENT email, correct subject, under 300 characters, no Message email; "the team has been alerted" only after the send
+- [ ] Pricing or other message: **one successful** Message email; hours-only call: no email
+- [ ] Failure paths F1 to F4 run on a **separate test agent** (connector broken there, never on the live agent): honest failure wording, no "saved" or "passed along", outside addresses refused
+- [ ] If one agent covers day and night: time-boundary calls T1 to T4 (just before and after closing and opening, and a listed holiday)
 - [ ] Smoke / medical: "Please hang up and dial 911 now" is the first reply
 - [ ] Person request: no transfer, no names
 - [ ] Post-call email arrived for each qualifying call (not expected for Try it live)

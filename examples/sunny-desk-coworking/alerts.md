@@ -10,7 +10,7 @@ xAI's post-call email is metadata only (no summary, no urgency flag), so the age
 | Subject | `URGENT: Sunny Desk` |
 | Body | Plain text, under 300 characters, no links |
 | Body format | `Urgent call. Caller: <name>, <number>. Issue: <one sentence>. Called <day date> at <time> Pacific.` |
-| Fallback phone number | none (after a failed send and retry, the agent says the message is saved and the team will see it) |
+| Approved alternative | none (after a failed send and retry, the agent says it couldn't send the message and can't confirm the team received it, gives 911 for any danger, and asks the caller to call back the next business day) |
 | When | Once per urgent call, as soon as name, number and issue are known |
 | Urgent criteria | lockout; leak or flood; discovered break-in; power, heating or cooling failure; caller says emergency |
 | Who reads alerts | Group members get phone push notifications for the group label |
@@ -20,7 +20,7 @@ Example: `Urgent call. Caller: Jordan Lee, 555-555-0100. Issue: Locked out of su
 ## Message emails
 For every non-urgent call where a message is taken, the same Gmail Send Message tool sends exactly one plain-text email to alerts@example.com with subject `Message: Sunny Desk` and a short body containing the caller, callback number, one-sentence reason and time. Spam, sales pitches, robocalls, wrong numbers and answer-only calls get no email. An urgent call gets only the urgent email, never both; at most one email per call. The provider's post-call summary email stays enabled separately.
 
-Risk (explained to the owner): callers can trigger any enabled connector tool, so the connector is send-only and the Instructions name one recipient.
+Risk (explained to the owner): callers can trigger any enabled connector tool. Send-only access limits the agent to sending, but the single recipient is a prompt-level rule in the Instructions; nothing outside the agent stops an email to another address. Future hardening: an alert path with a fixed destination (see `templates/alerts.md`).
 
 ## Test log (fictional)
 | Test | Result |

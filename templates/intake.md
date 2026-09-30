@@ -32,10 +32,10 @@ Never write passwords, API keys, SIP passwords or card numbers here.
 
 ## Urgent calls
 - What counts as urgent (e.g. lockout, leak or flood, break-in, power or heating failure, caller says "emergency"):
-- Team inbox: the ONE address the agent may email, for urgent alerts and messages (a group address is fine):
+- Team inbox: the ONE address the agent is told to email, for urgent alerts and messages (a group address is fine). This is a prompt-level rule unless you add an independent allowlist:
 - Dedicated sending mailbox the owner controls (for the agent's Gmail connector):
 - Alert subject (e.g. "URGENT: <Location>"):
-- Fallback phone number callers can try if an urgent alert fails (optional; must never route back to the AI):
+- Approved alternative callers can try if an email fails, such as another number a person answers (optional; must never route back to the AI). If none, callers are asked to call back during front desk hours or the next business day:
 
 ## Knowledge
 - Sources (URLs, docs):
