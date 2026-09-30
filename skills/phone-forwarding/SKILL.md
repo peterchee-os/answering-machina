@@ -28,7 +28,7 @@ If extensions ring staff **cell phones**, the cell's personal voicemail can grab
 | Mode | What changes | Risk | Rollback |
 |---|---|---|---|
 | A. After hours (**start here**) | The after-hours time frame's destination becomes the AI number | Low | Point the time frame back to its old destination |
-| B. No-answer overflow (daytime) | The front-desk queue's "if unanswered" destination becomes the **daytime** agent's number. See **business-hours-mode** | Low; staff answer first | Set the unanswered destination back (usually voicemail) |
+| B. No-answer overflow (daytime) | The front-desk queue's "if unanswered" destination becomes the agent's number: the same time-aware agent, or a separate daytime agent. See **business-hours-mode** | Low; staff answer first | Set the unanswered destination back (usually voicemail) |
 | C. Menu option | "Press N for our assistant" goes to the AI number as an external number | Low | Clear the option and re-record the greeting |
 | D. Full takeover | The main number goes to the AI, which transfers to staff | High; not recommended | Point the number back to its old queue or user |
 
@@ -57,4 +57,4 @@ Write `routing-plan.md`: mode, exact screens and fields, old value, new value, t
 - **Any other hosted PBX**: look for "time-of-day routing", "schedule", "holiday", "no-answer destination" and "forward to external number", then follow the same rules.
 
 ## 6. Business-hours overflow
-Daytime routing (mode B) points the staff queue's unanswered destination at a **separate daytime agent**, never at the after-hours agent, whose greeting says "we're closed". Launch it only after after-hours has run live for 1 to 2 weeks. The full design, transfer rules and tests are in **business-hours-mode**.
+Daytime routing (mode B) points the staff queue's unanswered destination at either **one time-aware agent** (the after-hours agent, with Instructions that check the current time and a greeting that never says "we're closed") or a **separate daytime agent**. Never point it at an agent whose greeting or Instructions assume the office is closed. The recommended rollout is after hours first, live for 1 to 2 weeks. The full design, transfer rules and tests are in **business-hours-mode**.

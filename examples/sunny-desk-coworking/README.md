@@ -9,7 +9,7 @@ A complete, made-up deployment filled in from `templates/`. The business, people
 | `welcome.txt` | Welcome message, verbatim |
 | `guardrails.md` | 10 console guardrails + extras |
 | `intents.md` | Caller-intent map |
-| `alerts.md` | Urgent alert design |
+| `alerts.md` | Urgent alert and message email design |
 | `test-script.md` | Phone and Try it live tests |
 | `kb/` | Files uploaded to the file collection `sunny-desk-kb` |
 | `open-items.md` | What the owner still has to decide |

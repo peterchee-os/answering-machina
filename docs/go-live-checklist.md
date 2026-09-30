@@ -1,6 +1,8 @@
 # Go-live checklist
 
-Tick every box before routing real calls to the agent. The owner approves each live change individually.
+**Required.** This checklist and the test script (`templates/test-script.md`) aren't optional. Tick every box before routing real calls to the agent. The owner approves each live change individually.
+
+**Test on the free xAI number first.** Before you route any real line, run the whole test script by phone on the free xAI test number and fix anything that fails. Only then change your phone system.
 
 ## Design
 - [ ] Intake complete; open items acknowledged
@@ -8,7 +10,9 @@ Tick every box before routing real calls to the agent. The owner approves each l
 - [ ] KB upload set limited to what's in scope; nothing invented; no staff names or personal numbers
 - [ ] Recording sentence approved **word for word**
 - [ ] Exactly 10 console guardrails (Name + Description); extras in the Instructions
-- [ ] Urgent criteria agreed; one alert recipient; fixed subject; body under 300 characters
+- [ ] Urgent criteria agreed; one team inbox (`<team inbox>`); fixed subjects; bodies under 300 characters; fallback phone number set or "none"
+- [ ] One **Email policy** section in the Instructions (urgent: one URGENT email; message: one Message email; everything else: none)
+- [ ] Time of day wording in place; Welcome message doesn't say "closed" if the agent will answer daytime calls
 
 ## Console
 - [ ] Instructions pasted; after reload, **first and last lines match** `prompt.md`
@@ -21,10 +25,12 @@ Tick every box before routing real calls to the agent. The owner approves each l
 - [ ] Published; Live badge showing
 - [ ] Screenshots before/after every change in the setup log
 
-## Tests (by phone, from a cell, on the free xAI test number)
+## Tests (required; by phone, from a cell, on the free xAI test number, before any real routing)
+- [ ] Every call in `templates/test-script.md` run and passed
 - [ ] Hours, weekend, holiday, address, parking: all correct from Key facts
 - [ ] Price pressure: no number spoken
-- [ ] Lockout / leak / power: urgent message, **exactly one** alert email, correct subject, under 300 characters
+- [ ] Lockout / leak / power: urgent message, **exactly one** URGENT email, correct subject, under 300 characters, no Message email; "the team has been alerted" only after the send
+- [ ] Pricing or other message: **exactly one** Message email; hours-only call: no email
 - [ ] Smoke / medical: "Please hang up and dial 911 now" is the first reply
 - [ ] Person request: no transfer, no names
 - [ ] Post-call email arrived for each qualifying call (not expected for Try it live)
@@ -38,9 +44,13 @@ Tick every box before routing real calls to the agent. The owner approves each l
 - [ ] Rollback steps written before the change
 - [ ] After-hours destination changed with the owner's explicit OK
 - [ ] Test calls: during hours (staff), after hours (agent), rollback works
+- [ ] If the agent also takes daytime no-answer calls: a daytime call that rings out gets the agent, which never says "closed" and promises follow-up "as soon as someone is free"
 - [ ] Caller ID on forwarded calls checked
 
+## Every day (daily health check)
+- [ ] Place one known test call (for example, ask the hours) and check the answer and the post-call email. At minimum, confirm in the console that the agent shows **Live** and the xAI account has credit (auto top-up on, or a low-credit check). Calls can fail silently when credit runs out.
+
 ## First two weeks
-- [ ] Daily call review running (see `docs/call-review.md`)
+- [ ] Daily call review running (see `docs/call-review.md`), including urgent calls with no matching URGENT email
 - [ ] KB gaps fixed through knowledge refresh
-- [ ] Only then consider business-hours mode
+- [ ] Only then consider business-hours mode (recommended): one time-aware agent, or a separate daytime agent (see `skills/business-hours-mode`)

@@ -27,14 +27,15 @@ Never write passwords, API keys, SIP passwords or card numbers here.
 
 ## When the AI answers
 - [ ] After hours only (recommended first)
-- [ ] Daytime overflow (later, see skills/business-hours-mode)
+- [ ] Daytime no-answer too (recommended after 1 to 2 weeks of after hours; see skills/business-hours-mode): one time-aware agent, or a separate daytime agent
 - After-hours definition (e.g. outside Mon to Fri 9:00 to 5:00, plus holidays):
 
 ## Urgent calls
 - What counts as urgent (e.g. lockout, leak or flood, break-in, power or heating failure, caller says "emergency"):
-- Alert recipient (ONE address; a group address is fine):
+- Team inbox: the ONE address the agent may email, for urgent alerts and messages (a group address is fine):
 - Dedicated sending mailbox the owner controls (for the agent's Gmail connector):
 - Alert subject (e.g. "URGENT: <Location>"):
+- Fallback phone number callers can try if an urgent alert fails (optional; must never route back to the AI):
 
 ## Knowledge
 - Sources (URLs, docs):

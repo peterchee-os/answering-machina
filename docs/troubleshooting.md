@@ -27,6 +27,8 @@ It needs a **microphone** ("Could not access the microphone" means the browser h
 - Is the connector's **Send Message** tool enabled?
 - Is the recipient address in the Instructions exactly right? Check the group's spam and moderation settings.
 - The body must stay under 300 characters, plain text.
+- Did the tool call return an error? The agent should retry once, then tell the caller it couldn't reach the team. The daily call review should catch every urgent call without a matching URGENT email.
+- Is the xAI account out of credit? Calls can fail silently. Turn on auto top-up or check the balance regularly.
 
 ## "The agent can't hear who's calling" / reads the wrong number
 **Know caller's phone number** is off by default. When on, the agent sees the caller ID. Forwarded calls may show your own business number, so always read the number back.

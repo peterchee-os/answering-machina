@@ -10,7 +10,7 @@ description: >-
 What the agent knows lives in two places, and both must stay in sync:
 - **Key facts** in the Instructions (`prompt.md`): name, address, hours, weekend and holiday rules, parking. The agent answers these without searching.
 - **The file collection** named in memory (`receptionist/<slug>/kb/*.md`), for depth.
-If a daytime agent exists (**business-hours-mode**), it shares the collection, so a KB change reaches both agents. The Key facts are pasted into **each** agent's Instructions separately.
+If a separate daytime agent exists (**business-hours-mode**, pattern 2), it shares the collection, so a KB change reaches both agents. The Key facts are pasted into **each** agent's Instructions separately.
 
 ## Steps
 1. **Gather sources**: the website and docs in memory, plus pending `call-review/proposals-*.md`. Fetch public pages with the web fetch tool, falling back to the browser. For private docs, ask the owner to share them to my computer.
@@ -20,7 +20,7 @@ If a daytime agent exists (**business-hours-mode**), it shares the collection, s
 5. **On explicit approval** (the owner signs in to the console):
    - Archive the old files to `kb-archive/<date>/`, then copy the approved `kb-next/` into `kb/`.
    - Replace the changed files in the collection (upload the new one, remove the old one), wait for Ready, and screenshot it.
-   - If Key facts, hours, urgent rules or the alert recipient changed: update `prompt.md`, paste it into each affected agent, reload, check the **first and last lines** match, and **Publish** with the owner's OK.
+   - If Key facts, hours, urgent rules or the team inbox changed: update `prompt.md`, paste it into each affected agent, reload, check the **first and last lines** match, and **Publish** with the owner's OK.
 6. **Verify**: re-run the matching tests (hours and holidays **by phone**; the Try it live panel is fine for the rest). Record them in `test-results.md`.
 7. **Record** the refresh date and changes in memory, and mark the proposals used as applied.
 

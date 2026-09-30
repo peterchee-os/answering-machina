@@ -8,7 +8,7 @@ Use made-up names and test numbers.
 Every phone call also checks:
 - **(E)** a post-call email ("Call completed: Sunny Desk Receptionist (<duration>)") arrived at each recipient, if the call lasted at least the minimum duration
 - **(R)** if a message was taken, the spoken recap had the right name, number, reason and urgency
-- **(A)** urgent calls only: exactly one alert email to alerts@example.com, subject `URGENT: Sunny Desk`, body under 300 characters. Non-urgent calls: **no** alert email
+- **(A)** agent emails, all to alerts@example.com: urgent calls get exactly one `URGENT: Sunny Desk` email (body under 300 characters) and no Message email; non-urgent calls with a message get exactly one `Message: Sunny Desk` email; answer-only calls get **no** email. "The team has been alerted" is said only after the send succeeded
 
 ## After-hours agent
 | # | Persona and when | Caller says | Expected | Pass check |

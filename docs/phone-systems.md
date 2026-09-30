@@ -19,7 +19,7 @@ If extensions ring staff cell phones, a cell's personal voicemail can answer bus
 | Mode | Where to set it | Recommended |
 |---|---|---|
 | After hours: time-of-day routing sends closed-hours calls to the AI | PBX or cloud phone system schedules | **Start here** |
-| No-answer overflow: unanswered calls go to the AI | Queue or user "if unanswered" setting, or carrier conditional forwarding | Later, with a separate daytime agent (see `skills/business-hours-mode`) |
+| No-answer overflow: unanswered calls go to the AI | Queue or user "if unanswered" setting, or carrier conditional forwarding | After after hours has run for a while. Either one time-aware agent covers after hours and daytime no-answer (its prompt checks the current time and adjusts its wording), or a separate daytime agent answers these calls (see `skills/business-hours-mode`) |
 | Menu option: "press 3 for our assistant" | Auto attendant option to an external number | Optional |
 | Full takeover: every call goes to the AI | Number routing | Not recommended |
 
