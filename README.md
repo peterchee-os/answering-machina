@@ -74,7 +74,7 @@ Answering Machina packages everything we learned into a kit you can reuse for yo
 
 ## What it costs
 
-**Our early number:** our first five real phone test calls, on the free xAI number, cost **$0.37 total** out of $10 of starter credit. That's what we saw, not a rate. It's lower than xAI's published $0.09 a minute would predict, and we haven't worked out why, so budget from the published rate. After a full day of building and testing, including browser test sessions, we had about $9 of the $10 left.
+**Our early number:** our first five real phone test calls, on the free xAI number, cost **$0.37 total** out of $10 of starter credit. That's what we saw, not a rate. It's lower than xAI's published $0.09 a minute would predict, and we haven't worked out why, so budget from the published rate. After a full day of building and testing, including browser test sessions, we had about $9 of the $10 left. The smallest credit top-up xAI allows is $5 (as of Sep 29, 2026), so that's the real minimum to start.
 
 **xAI's published rate:** $0.08 per minute of audio, plus $0.01 per minute on the free phone number ([xAI pricing](https://docs.x.ai/developers/pricing), [Voice Agent Builder announcement](https://x.ai/news/grok-voice-agent-builder)). That's $0.18 for a 2-minute call and $0.27 for a 3-minute call. For more detail and what we haven't verified, see [Cost details](#cost-details).
 
