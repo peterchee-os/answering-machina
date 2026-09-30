@@ -22,15 +22,15 @@ Getting to those numbers took some cleanup. Almost half of the raw phone records
 
 We built **Tess**, an AI receptionist, on xAI's [Grok Voice Agent Builder](https://x.ai/news/grok-voice-agent-builder), and we did it in one day with Grok Bot. Grok Bot interviewed me about the business, drafted Tess's script and knowledge base, and built the agent in the xAI console while I watched. Then it tested her on a free phone number, well away from our real lines.
 
-After hours, Tess:
+Tess now answers our Redmond main line in two ways. After hours, she's the first to pick up. During the day, if the desk doesn't answer within about 4 rings, the call goes to Tess instead of voicemail. She:
 - gives our hours, directions and parking,
-- takes a message, spelling the caller's name back and reading their number back,
-- emails our team right away when a call is urgent, like a member locked out of the building,
+- takes a message, spelling the caller's name back and reading their number back, and emails it to our team right away,
+- sends an urgent alert when a call can't wait, like a member locked out of the building,
 - tells anyone in danger to hang up and dial 911.
 
-Next is **daytime overflow**. When the desk doesn't pick up after about 4 rings, Tess answers instead of voicemail.
+Next, we'll round out what she knows and let her route calls to the right person.
 
-**Where it stands:** Tess passed end-to-end phone tests on 2026-09-29. We called her test number, and both the urgent alert and the post-call email arrived. She is **not on our main line yet**. We're rolling her out now, after hours first, and routing changes only with an owner's OK and a written rollback plan. We don't have results from real callers yet, and we won't claim any until we do.
+**Where it stands:** Tess passed end-to-end phone tests on 2026-09-29, and the urgent alert and the post-call email both arrived. That same night she went live on our Redmond main line, answering after hours and covering the calls the desk can't pick up during the day. We made each routing change only with an owner's OK and a written rollback plan. We don't have results from real callers yet, and we won't claim any until we do.
 
 ## Guidelines
 
