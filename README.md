@@ -13,7 +13,7 @@ Pick the AI assistant you already use (the **operator**) and the voice AI that a
 
 **Recommended: Grok Bot with xAI's Grok Voice Agents.** It's the simpler path. xAI's voice agent has a built-in Gmail connector, so it can send the in-call URGENT and Message emails with no other service, and the Grok Bot template sets everything up for you. It's also the path we've tested on a real line.
 
-**If you already use ChatGPT or Claude,** the Retell AI route works with those assistants. Expect more manual setup, and plan on a third-party automation account (Zapier or n8n) for in-call email alerts, because Retell agents have no built-in email tool.
+**If you already use ChatGPT or Claude,** we've documented a Retell AI route for those assistants. Expect more manual setup, and plan on a third-party automation account (Zapier or n8n) for in-call email alerts, because Retell agents have no built-in email tool.
 
 | You use | Voice platform | Status | Start here |
 |---|---|---|---|
@@ -54,7 +54,7 @@ Next, we'll round out what she knows, let her route calls to the right person, a
 
 **Where it stands (as of 2026-09-30, end of day PT):** Tess is live at both locations. She answers after hours and takes daytime calls the desk doesn't pick up within about 20 seconds. Sep 30 was the first full day live at both, and the results are under [Day one](#day-one-sep-30-2026). Getting here: she passed end-to-end phone tests on her free xAI number on 2026-09-29, and the urgent alert and the post-call email both arrived. That same night she went live on our Redmond main line after hours, and a real test call to the main line after hours reached her. We also turned on daytime backup that first night. That was my call as the owner, and it's sooner than this kit recommends (run after hours only for a week or two first). To make it work with one agent, we changed her prompt to check the time and adjust its wording. On Sep 30 the daytime path took its first real calls. We made each routing change only with an owner's OK and a written rollback plan.
 
-On our line, every real call now produces exactly one email to the team: an urgent alert, a message, or a short recap. Spam, wrong numbers and instant hang-ups get none. The short recap for answer-only calls isn't in the kit's templates yet; they still follow the [email policy](#guidelines) below.
+**An experiment on our own line, not part of the kit:** we're also trying a short recap email for answer-only calls, so every real call on our line produces exactly one email to the team (an urgent alert, a message, or a recap), and spam, wrong numbers and instant hang-ups get none. The kit's templates don't include this. They follow the [email policy](#guidelines) below, where answer-only calls get no email. If the recap proves useful, we'll add it to the templates as an option.
 
 For the first two weeks, Grok Bot runs a review every weekday at 7 AM. It reads the emails, scores every transcript, and checks that the agent is Live, its number is attached and there's credit left (it warns us under $5, or on a weekday with no calls). It drafts fixes, and nothing changes without my OK. We have one day of real-caller results so far (see [Day one](#day-one-sep-30-2026)), and we won't claim more than we've counted.
 
@@ -89,7 +89,7 @@ There were no urgent calls and no after-hours calls. One day is a small sample, 
 
 **What day one taught us:**
 - **Forwarded calls show your own number.** When our phone system forwards a call, the AI sees the business's own number as the caller ID, not the caller's. It only gets the real number by asking, which is one more reason it reads the number back on every message.
-- **Keep the AI's own email as the record of truth.** For a window of roughly six hours, some conversations weren't saved in the xAI console, but the AI's own emails kept working.
+- **Use the AI's team email as a fallback record when console history is incomplete.** For a window of roughly six hours, some conversations weren't saved in the xAI console, but the AI's own emails kept working. Email can fail too, so neither one is guaranteed on its own.
 - **Bots call too.** An automated listing-check bot called twice and just said "Hello?" over and over. The AI correctly sent no recap.
 - **Join the two logs.** The AI's call list only shows the calls it got. Joining it with the phone system's call log is what gives the real picture. We first misread a quiet stretch as missing data; the log showed staff had simply answered everything.
 
@@ -165,7 +165,7 @@ Prices change, so check the links before you decide. These services set things u
 - **Post-call emails from xAI carry no transcript** (and no summary). Transcripts stay in the console for 30 days.
 - **Recipient restriction is prompt-level only.** The Instructions tell the agent to email only your team inbox. Send-only access limits which actions the agent has, but not who it sends to. Unless you configure and verify an independent recipient allowlist, a persuasive caller or a model mistake could get an email sent to another address. A fixed-destination alert tool (a webhook, or a sending account that can only reach one address) is the better design; see the Risk section in [templates/alerts.md](templates/alerts.md#risk).
 - **Forwarded calls hide the caller's number.** When your phone system forwards a call, the AI may see your business's own number as the caller ID. It only gets the caller's real number by asking, so keep the read-back step.
-- **The console can miss conversations.** On our first full day, some conversations weren't saved in the xAI console for roughly six hours, while the AI's own emails kept working. Treat the AI's email to the team as the record of truth.
+- **The console can miss conversations.** On our first full day, some conversations weren't saved in the xAI console for roughly six hours, while the AI's own emails kept working. Use the AI's team email as a fallback record when console history is incomplete, keeping in mind that email can fail too.
 - **Bots call too.** Automated callers, like a listing-check bot that just says "Hello?", will reach the AI. Expect them in your counts, and check that they get no email.
 - **Door call boxes aren't supported yet.** A door buzz that reaches the AI gets the regular phone greeting, and the AI can't unlock doors. See [Next: door call boxes](#next-door-call-boxes).
 - **Only one day of real-caller results so far.** See [Day one](#day-one-sep-30-2026) and [What we'll measure](#what-well-measure).

@@ -4,13 +4,15 @@ All notable changes to Answering Machina are listed here.
 
 ## 2026-09-30: day one at both locations (docs only)
 
+Follow-up wording fixes the same night: the Retell route is described as documented rather than working, the recap email is labeled as an experiment outside the kit, and the console-gap lesson no longer calls email the record of truth.
+
 README and changelog updates after the first full day live at both locations. No template or playbook changes.
 
 - Where it stands: the AI receptionist is live on both main lines, answering after hours and taking daytime calls the desk doesn't pick up within about 20 seconds. The daytime path took its first real calls on Sep 30.
 - Day-one results (Sep 30, real outside calls on the two main lines, excluding door buzzers, the owner's test calls and an automated listing-check bot): Seattle 8 calls from 5 callers, 6 answered by staff, 2 by the AI; Redmond 6 calls from 5 callers, 5 answered by staff, 1 by the AI; none went to voicemail. The AI's 3 real calls were a vendor confirming an appointment (message emailed to the team), the same vendor calling again, and a first-time caller who hung up during the greeting. No urgent or after-hours calls.
 - Cost: 12 AI calls including tests, estimated from durations at $0.09 a minute at about $1.04 for the day and about $0.10 for the real calls.
-- Email: on our line every real call now produces exactly one email to the team (urgent alert, message or short recap); spam, wrong numbers and instant hang-ups get none. The recap isn't in the templates yet.
-- New known limits and lessons: forwarded calls show the business's own number as caller ID; the console missed some conversations for roughly six hours, so the AI's own email is the record of truth; bots call too (no recap sent, correctly); join the phone system's call log with the AI's call list to get the real picture.
+- Email: on our own line we're trying a short recap email for answer-only calls, so every real call produces exactly one email to the team. This is an experiment outside the kit; the templates' email policy is unchanged (answer-only calls get no email).
+- New known limits and lessons: forwarded calls show the business's own number as caller ID; the console missed some conversations for roughly six hours, so the AI's team email served as a fallback record (email can fail too); bots call too (no recap sent, correctly); join the phone system's call log with the AI's call list to get the real picture.
 - New "Next: door call boxes" section: Jan 1 – Sep 30, 2026, the two door call boxes rang 3,962 times, staff answered about 3,500 (about 14.6 hours of talk time), 457 went unanswered and 563 came after hours. Door calls need their own greeting; AI door unlocking by keypad tone is untested and marked as next.
 
 ## Unreleased: multi-platform layout
