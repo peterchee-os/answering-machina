@@ -8,6 +8,18 @@
 
 > **v0.1, early release:** running on one real business line so far; test on the free xAI number and complete the [go-live checklist](docs/go-live-checklist.md) before you route yours (see [Known limits](#known-limits)).
 
+## Choose your setup
+Pick the AI assistant you already use (the **operator**) and the voice AI that answers the phone (the **platform**). The receptionist's design, rules and tests are the same either way ([the core](core/README.md)).
+
+| You use | Voice platform | Status | Start here |
+|---|---|---|---|
+| **ChatGPT** (a dot, a project or a regular chat) | Retell AI | New. Written from OpenAI's and Retell's docs, not yet tested by us | [operators/chatgpt-dot/INSTRUCTIONS.md](operators/chatgpt-dot/INSTRUCTIONS.md) |
+| **Claude** (claude.ai, Claude Desktop, Claude Code) or another MCP assistant | Retell AI | New, not yet tested by us | [operators/claude](operators/claude/README.md) |
+| **Grok Bot** | xAI Grok Voice Agent Builder | Tested on one real line | The **Add** button above, then the [Quick start](#quick-start) |
+| No assistant | Either | | [platforms/](platforms/README.md) |
+
+All operators: [operators/](operators/README.md). Platform comparison: [platforms/](platforms/README.md).
+
 ## Why we built this
 
 Our front desk is small, and the phone is only one part of the job. The same people greet members, give tours, sort mail and packages, and keep the space running. So the phone sometimes rings while they're walking a visitor through the building or at the mailroom. The desk also has hours, and people keep calling just after we close and just before we open.
@@ -96,13 +108,13 @@ Answering Machina packages everything we learned into a kit you can reuse for yo
 Prices change, so check the links before you decide. These services set things up for you and bundle features this kit doesn't have. With this kit, the tradeoff for the lower per-call cost is the owner's time for setup and review. The full fact-check, with the math, is in [docs/research/pricing-factcheck.md](docs/research/pricing-factcheck.md).
 
 ## Works with
-- **Voice AI**: xAI's Grok Voice Agent Builder only, for now.
-- **AI assistant**: built for Grok Bot. The playbooks are plain Markdown, so other assistants such as Claude or ChatGPT may be able to follow them, but we haven't tested that. Manual use is supported (see [Manual use](#manual-use-without-grok-bot)).
+- **Voice AI**: xAI's Grok Voice Agent Builder (tested). **Retell AI** is documented from Retell's public docs but not yet tested by us (see [platforms/retell](platforms/retell/README.md)).
+- **AI assistant**: built for Grok Bot on xAI. For Retell, ChatGPT (with or without a dot) through Retell's ChatGPT app, or Claude and other MCP clients through Retell's MCP server (see [operators/](operators/README.md)); neither tested end to end yet. Manual use is supported (see [Manual use](#manual-use-without-grok-bot) for xAI, or the [Retell guide](platforms/retell/README.md)).
 - **Phone systems**: anything that can forward calls to an outside number. Tested on a NetSapiens-based hosted PBX. Setup steps are documented, but not yet tested by us, for Google Voice for Google Workspace, RingCentral, and AT&T, Verizon and T-Mobile conditional forwarding (see [docs/phone-systems.md](docs/phone-systems.md)). The free personal Google Voice can't forward to the agent, because forwarding needs a verification code step the agent can't complete.
 
 ## Known limits
 - **Early release (v0.1).** One real deployment so far. Expect rough edges.
-- **xAI voice only.** No other voice AI platform is supported yet.
+- **Retell support is untested.** xAI is the only platform running on a real line. The Retell guide and the ChatGPT and Claude operator instructions come from public docs and list open "TODO: verify" items. Retell also has no built-in email tool, so its alerts need an endpoint you set up (see [platforms/retell](platforms/retell/README.md#7-email-alerts-during-a-call)).
 - **No live transfers yet.** The receptionist takes messages instead of connecting callers to staff. The **business-hours-mode** playbook describes optional daytime transfers, but we haven't tested them.
 - **English only.** We've only tested English. The template tells the agent to reply in the caller's language if it can, so check that line in the Instructions first, and test any other language before you rely on it.
 - **Answers only from its knowledge base** (the Key facts block plus the uploaded files). Everything else becomes a message.
@@ -114,6 +126,7 @@ Prices change, so check the links before you decide. These services set things u
 More technical detail is under [Limitations](#limitations).
 
 ## Quick start
+These steps are for Grok Bot and xAI. Using ChatGPT or Claude with Retell? Start with [operators/chatgpt-dot/INSTRUCTIONS.md](operators/chatgpt-dot/INSTRUCTIONS.md) or [operators/claude](operators/claude/README.md) instead.
 
 1. **Add Answering Machina to Grok Bot and answer its questions.** [Add the template](https://x.ai/bot/FUSB3whX23EEO5aiyTk0P) and it starts the interview on its own. (You can also give Grok Bot the seven playbooks in [`skills/`](skills/) and ask it to run **getting-started**.) It asks one question at a time: your hours and locations, your phone system, what counts as urgent, where alerts go, and the exact recording notice you want.
 2. **Review its drafts, then let it build and test.** It writes the script, guardrails and knowledge base for you to check. Then it builds the agent in [console.x.ai](https://console.x.ai) while you're signed in, and you run the test script from your cell on the free xAI test number. **This step is required:** don't route a real line until the tests pass and the [go-live checklist](docs/go-live-checklist.md) is complete.
@@ -129,7 +142,7 @@ No Grok Bot? Everything works by hand too. See [Manual use](#manual-use-without-
 - People setting this up for a client who want a repeatable, reviewable process.
 
 ## How it works
-Your phone system stays in charge and sends calls to the AI **only** when you tell it to: after hours at first, and later as daytime overflow, either to the same time-aware agent or to a separate daytime agent. The agent answers from a short **Key facts** block plus a small knowledge base, takes messages, and never transfers after hours. For each message or urgent call, it sends one short email to your team inbox through a send-only Gmail connector. xAI sends a metadata-only "Call completed" email for each phone call that lasts at least the minimum duration you set, and the full transcript lives in the console.
+Your phone system stays in charge and sends calls to the AI **only** when you tell it to: after hours at first, and later as daytime overflow, either to the same time-aware agent or to a separate daytime agent. The agent answers from a short **Key facts** block plus a small knowledge base, takes messages, and never transfers after hours. For each message or urgent call, it sends one short email to your team inbox through a send-only Gmail connector. xAI sends a metadata-only "Call completed" email for each phone call that lasts at least the minimum duration you set, and the full transcript lives in the console. (On Retell, the email goes through a function you set up, and transcripts live in Call History; see [platforms/retell](platforms/retell/README.md).)
 
 ### Call flow
 ```mermaid
@@ -164,6 +177,9 @@ flowchart LR
 
 ## What's in the box
 ```
+core/        map of the platform-neutral core (templates, docs, skills, examples)
+platforms/   xai/ (links to the original guide), retell/ (Retell AI guide + prompt changes)
+operators/   grok-bot/, chatgpt-dot/INSTRUCTIONS.md (ChatGPT + Retell), claude/
 skills/      7 playbooks: getting-started, receptionist-design, voice-agent-setup,
              phone-forwarding, business-hours-mode, call-review, knowledge-refresh
 templates/   intake, prompt (with Key facts), guardrails (10 + extras), intents,
@@ -209,7 +225,10 @@ Checked against xAI's published pages on 2026-09-29. Check the current [xAI pric
 - Your phone plan's charges for forwarded calls. A forwarded call can use minutes on your plan as well as xAI minutes.
 - The cost of the dedicated Gmail or Workspace mailbox, and of running Grok Bot.
 
+Building on Retell instead? Its rates and a worked example are in [platforms/retell](platforms/retell/README.md#cost).
+
 ## Limitations
+These are the xAI build's limitations. Retell's are in [its guide](platforms/retell/README.md#limits).
 - **Beta console.** xAI's Voice Agent Builder is in beta, and its screens and limits change. The skills say what was seen and when, and flag anything unverified.
 - **No schedule in the agent.** Your phone system decides when calls reach it. A time-aware prompt only changes what the agent says.
 - **Post-call email is metadata only**, with no summary or urgency flag. Details stay in Conversations for 30 days.
@@ -224,10 +243,13 @@ Checked against xAI's published pages on 2026-09-29. Check the current [xAI pric
 - Concurrency limits for Builder calls aren't documented. Test every language you rely on.
 - The phone and consent docs are US-focused. **Nothing here is legal advice.**
 
+## Related projects
+- [AIVA](https://github.com/7XLabs/Aiva): an open-source, self-hosted AI voice receptionist built on Claude, Twilio and Next.js. Not affiliated with this project.
+
 ## Contributing
 See [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md). Don't include real personal data or secrets, and verify everything or mark it as unverified.
 
 ## License
 Answering Machina is released under the [MIT License](LICENSE). Copyright (c) 2026 Peter Chee.
 
-**Not affiliated with xAI.** This is an independent project, not affiliated with, sponsored by or endorsed by xAI. "Grok", "xAI" and other product names belong to their owners.
+**Not affiliated with xAI.** This is an independent project, not affiliated with, sponsored by or endorsed by xAI, OpenAI, Anthropic or Retell AI. "Grok", "xAI", "ChatGPT", "Claude", "Retell" and other product names belong to their owners.

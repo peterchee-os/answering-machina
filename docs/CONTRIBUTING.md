@@ -4,6 +4,7 @@ Thanks for helping. This project is a set of plain-Markdown skills and templates
 
 ## Good contributions
 - **Console changes**: xAI's Voice Agent Builder is in beta and changes. If a screen, limit or behaviour differs from what the skills say, open an issue or PR with the date you saw it and what's on screen. Screenshots help; remove account names, numbers and emails first.
+- **Platform and operator changes**: the Retell guide (`platforms/retell/`) and the ChatGPT and Claude operator guides (`operators/`) were written from public docs. If you run them, tell us which "TODO: verify" items you confirmed or found wrong, with the date and a link or a description of the screen.
 - **Phone systems**: steps for a carrier or PBX we don't cover, with a link to the vendor's own documentation. Mark anything you couldn't confirm "verify with your provider".
 - **Templates and examples**: clearer wording, better tests, new industries (e.g. clinics, salons, trades) as fictional examples.
 - **Lessons from real deployments**: what broke and how you fixed it, generalized.

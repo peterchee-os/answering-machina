@@ -2,6 +2,15 @@
 
 All notable changes to Answering Machina are listed here.
 
+## Unreleased: multi-platform layout
+
+Adds a second platform and more operators. Nothing existing moved, so the Grok Bot template, the Add button and existing links still work. The new material is written from public docs and isn't tested on a real line yet; unconfirmed steps are marked "TODO: verify".
+
+- `core/`: a map of the platform-neutral core (it stays in `templates/`, `docs/`, `skills/` and `examples/`) and a table of what changes per platform.
+- `platforms/`: a comparison page; `platforms/xai/` indexes the original xAI guide; `platforms/retell/` is a new Retell AI build guide (agent, prompt changes, welcome message, knowledge base, email alert options, post-call review, retention, test number, routing, transfers, costs), with sources.
+- `operators/`: Grok Bot (unchanged), ChatGPT and dots (`operators/chatgpt-dot/INSTRUCTIONS.md`: a first-run owner guide plus paste-able operator instructions for any assistant), and Claude (custom connector or Claude Code with Retell's MCP server and a restricted key the owner enters).
+- README: a "Choose your setup" table, updated Works with, Known limits, Quick start and What's in the box, a Related projects line, and a broader not-affiliated note. The story, stats and pricing comparison are unchanged.
+
 ## v0.1.1 (unreleased)
 
 Fixes from a second outside review. Not tagged or released yet.
