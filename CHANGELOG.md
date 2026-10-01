@@ -9,6 +9,8 @@ Adds a second platform and more operators. Nothing existing moved, so the Grok B
 - `core/`: a map of the platform-neutral core (it stays in `templates/`, `docs/`, `skills/` and `examples/`) and a table of what changes per platform.
 - `platforms/`: a comparison page; `platforms/xai/` indexes the original xAI guide; `platforms/retell/` is a new Retell AI build guide (agent, prompt changes, welcome message, knowledge base, email alert options, post-call review, retention, test number, routing, transfers, costs), with sources.
 - `operators/`: Grok Bot (unchanged), ChatGPT and dots (`operators/chatgpt-dot/INSTRUCTIONS.md`: a first-run owner guide plus paste-able operator instructions for any assistant), and Claude (custom connector or Claude Code with Retell's MCP server and a restricted key the owner enters).
+- Email alerts on Retell: no project-built code or endpoint. The guide points to existing third-party services attached as an MCP server: Zapier MCP (Gmail Send Email, connection token in a header) or n8n (MCP Server Trigger, plus a community Gmail MCP template), with the recipient fixed in that service.
+- Positioning: Grok Bot with xAI is stated as the simpler, recommended path (built-in Gmail connector, template does the setup); the Retell routes need more manual setup and a Zapier or n8n account for in-call alerts.
 - README: a "Choose your setup" table, updated Works with, Known limits, Quick start and What's in the box, a Related projects line, and a broader not-affiliated note. The story, stats and pricing comparison are unchanged.
 
 ## v0.1.1 (unreleased)

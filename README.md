@@ -11,11 +11,15 @@
 ## Choose your setup
 Pick the AI assistant you already use (the **operator**) and the voice AI that answers the phone (the **platform**). The receptionist's design, rules and tests are the same either way ([the core](core/README.md)).
 
+**Recommended: Grok Bot with xAI's Grok Voice Agents.** It's the simpler path. xAI's voice agent has a built-in Gmail connector, so it can send the in-call URGENT and Message emails with no other service, and the Grok Bot template sets everything up for you. It's also the path we've tested on a real line.
+
+**If you already use ChatGPT or Claude,** the Retell AI route works with those assistants. Expect more manual setup, and plan on a third-party automation account (Zapier or n8n) for in-call email alerts, because Retell agents have no built-in email tool.
+
 | You use | Voice platform | Status | Start here |
 |---|---|---|---|
-| **ChatGPT** (a dot, a project or a regular chat) | Retell AI | New. Written from OpenAI's and Retell's docs, not yet tested by us | [operators/chatgpt-dot/INSTRUCTIONS.md](operators/chatgpt-dot/INSTRUCTIONS.md) |
-| **Claude** (claude.ai, Claude Desktop, Claude Code) or another MCP assistant | Retell AI | New, not yet tested by us | [operators/claude](operators/claude/README.md) |
-| **Grok Bot** | xAI Grok Voice Agent Builder | Tested on one real line | The **Add** button above, then the [Quick start](#quick-start) |
+| **Grok Bot** (recommended) | xAI Grok Voice Agent Builder | Tested on one real line. Built-in Gmail alerts | The **Add** button above, then the [Quick start](#quick-start) |
+| **ChatGPT** (a dot, a project or a regular chat) | Retell AI | New. Written from OpenAI's and Retell's docs, not yet tested by us. Email alerts need Zapier or n8n | [operators/chatgpt-dot/INSTRUCTIONS.md](operators/chatgpt-dot/INSTRUCTIONS.md) |
+| **Claude** (claude.ai, Claude Desktop, Claude Code) or another MCP assistant | Retell AI | New, not yet tested by us. Email alerts need Zapier or n8n | [operators/claude](operators/claude/README.md) |
 | No assistant | Either | | [platforms/](platforms/README.md) |
 
 All operators: [operators/](operators/README.md). Platform comparison: [platforms/](platforms/README.md).
@@ -114,7 +118,7 @@ Prices change, so check the links before you decide. These services set things u
 
 ## Known limits
 - **Early release (v0.1).** One real deployment so far. Expect rough edges.
-- **Retell support is untested.** xAI is the only platform running on a real line. The Retell guide and the ChatGPT and Claude operator instructions come from public docs and list open "TODO: verify" items. Retell also has no built-in email tool, so its alerts need an endpoint you set up (see [platforms/retell](platforms/retell/README.md#7-email-alerts-during-a-call)).
+- **Retell support is untested.** xAI is the only platform running on a real line. The Retell guide and the ChatGPT and Claude operator instructions come from public docs and list open "TODO: verify" items. Retell also has no built-in email tool, so in-call alerts need a third-party automation account, Zapier or n8n (see [platforms/retell](platforms/retell/README.md#7-email-alerts-during-a-call)).
 - **No live transfers yet.** The receptionist takes messages instead of connecting callers to staff. The **business-hours-mode** playbook describes optional daytime transfers, but we haven't tested them.
 - **English only.** We've only tested English. The template tells the agent to reply in the caller's language if it can, so check that line in the Instructions first, and test any other language before you rely on it.
 - **Answers only from its knowledge base** (the Key facts block plus the uploaded files). Everything else becomes a message.

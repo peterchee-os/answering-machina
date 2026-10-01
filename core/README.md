@@ -30,7 +30,7 @@ Most of Answering Machina doesn't depend on which voice AI answers the phone. Th
 | Topic | Grok Voice Agent Builder (xAI) | Retell AI |
 |---|---|---|
 | Test number | Free number provisioned by xAI | A Retell number you buy ($2/month for a US local number) |
-| How the agent sends the URGENT and Message emails | Built-in Gmail connector, Send Message only | No built-in email tool. A custom function to an endpoint you control (recommended), or an MCP server. See the Retell guide |
+| How the agent sends the URGENT and Message emails | Built-in Gmail connector, Send Message only | No built-in email tool. Attach a third-party automation service's MCP server (Zapier or n8n) with a Gmail send action. See the Retell guide |
 | Where guardrails live | Up to 10 console guardrails, plus the Instructions | All in the Instructions. Retell's own "Guardrails" setting is a topic filter, not named rules |
 | Current time for the Time of day section | The agent's time zone setting | A time variable in the prompt, such as `{{current_time_America/Chicago}}` |
 | Caller's number | "Know caller's phone number" toggle | The `{{user_number}}` variable |

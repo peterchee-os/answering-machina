@@ -23,15 +23,13 @@ Replace the first sentence:
 
 > These are the only emails you ever send. Use the Gmail Send Message tool, and send only to <team inbox>.
 
-with (Option A in the guide):
+with (use the tool's exact name as it appears under **Add Tools** in Retell's MCPs section, for example Zapier's Gmail Send Email tool):
 
-> These are the only emails you ever send. Use the send_team_email tool; it delivers only to the team inbox.
+> These are the only emails you ever send. Use the <email tool name> tool, and send only to <team inbox>.
 
-Keep the next sentences (never email anyone else; what to say if a caller asks). In each case, pass the subject word as `kind` (`URGENT` or `Message`) and the body text exactly as written. The `<Location>` part of the subject is added by your endpoint, so make sure the endpoint uses the same `URGENT: <Location>` and `Message: <Location>` subjects.
+Keep "send only to <team inbox>" even when **To** is fixed in Zapier or n8n (section 7 of [the guide](README.md#7-email-alerts-during-a-call)). The fixed field is the real control; the sentence keeps the model from trying to fill in another address. Keep the rest of the section as written: the subjects (`URGENT: <Location>`, `Message: <Location>`), bodies under 300 characters, at most one successful email per call, and the failure wording.
 
 Delete the last sentence of the section ("The provider's post-call email is separate; you don't send it."). Retell doesn't send one.
-
-If you used an MCP email tool (Option B) instead, name that tool and keep "send only to <team inbox>", because the recipient is then a prompt-level rule again.
 
 If you have no alert path at all, don't use this template's Email policy as written: see "Without any of these" in [the guide](README.md#without-any-of-these).
 
@@ -42,7 +40,7 @@ Replace:
 
 with:
 
-> - **send_team_email**: only as described in Email policy. It returns ok only when the email was accepted; anything else, including an error or no reply, counts as a failed send.
+> - **<email tool name>**: only as described in Email policy. Only a success result counts as sent; an error, a timeout or no result counts as a failed send.
 
 In the **Messages** line, use the "on" wording, because Retell always provides the caller's number as `{{user_number}}`:
 

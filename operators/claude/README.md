@@ -2,6 +2,8 @@
 
 Claude can act as the operator for a **Retell AI** build. It reaches your Retell account through Retell's hosted MCP server, then follows the same operator rules as ChatGPT: [Part B of INSTRUCTIONS.md](../chatgpt-dot/INSTRUCTIONS.md#part-b-operator-instructions-paste-this).
 
+> **Before you start:** the simpler path is [Grok Bot with xAI's Grok Voice Agents](../grok-bot/README.md). xAI's voice agent has a built-in Gmail connector for in-call alerts, and the Grok Bot template sets everything up. Use this guide if you'd rather work in Claude. It takes more manual setup, and in-call email alerts need a third-party automation account (Zapier or n8n; see the [Retell guide](../../platforms/retell/README.md#7-email-alerts-during-a-call)).
+
 > **Status:** from Anthropic's and Retell's public docs, read 2026-09-30 (PT). Not yet tested end to end with this kit. Unconfirmed steps are marked **TODO: verify**.
 
 ## How it connects

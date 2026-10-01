@@ -4,6 +4,8 @@ How to build the Answering Machina receptionist on [Retell AI](https://www.retel
 
 > **Status: documented, not yet tested by us.** Everything here comes from Retell's public docs and pricing page, read on 2026-09-30 (PT). Nothing on this page has run on a real line yet. Anything we couldn't confirm is marked **TODO: verify**. Retell's dashboard changes, so if a label differs, go by what you see and open an issue.
 
+> **Which platform?** If you're choosing fresh, the [xAI build with Grok Bot](../xai/README.md) is simpler and is the one we recommend: xAI's voice agent has a built-in Gmail connector for in-call alerts, and the Grok Bot template sets it all up. Retell is a good fit if you already use ChatGPT or Claude, or want Retell's features (such as warm transfers). Expect more manual setup and a third-party automation account (Zapier or n8n) for in-call email alerts.
+
 The design doesn't change: Key facts in the Instructions, one Email policy, honest "alerted only after a successful send" wording, after hours first, and the full test script on a test number before any real line. Read [the core](../../core/README.md) first. This page covers only what's different on Retell.
 
 ## Contents
@@ -27,10 +29,10 @@ The design doesn't change: Key facts in the Instructions, one Email policy, hone
 - [Everything marked TODO: verify](#everything-marked-todo-verify)
 
 ## Before you start
-- **Time:** an afternoon for the build and the test calls, plus whatever the email-alert endpoint takes you (section 7).
+- **Time:** an afternoon for the build and the test calls, plus setting up a Zapier or n8n account for email alerts (section 7).
 - **Money:** new Retell accounts start with **$10 of free trial credit**, no card needed. Buying a phone number needs a card on file, and the number costs **$2/month** ([quick start](https://docs.retellai.com/get-started/quick-start), [testing pricing](https://docs.retellai.com/test/testing-pricing)).
 - **Identity check:** Retell may ask you to complete KYC (identity) verification. Its KYC page says verification unlocks outbound calling, phone number purchases and SMS ([KYC](https://docs.retellai.com/accounts/kyc)). The receptionist doesn't need outbound calls.
-- **Plain truth about email:** Retell has **no built-in "send an email" tool** for agents. To get the kit's URGENT and Message emails during a call, you need an endpoint or MCP server you control (section 7). Without one, the receptionist can still answer questions and take messages that land in Call History, but it can't alert anyone during the call, and it must not say it has.
+- **Plain truth about email:** Retell has **no built-in "send an email" tool** for agents. To get the kit's URGENT and Message emails during a call, you attach a third-party automation service (Zapier or n8n) as an MCP server, which needs its own account (section 7). This is the main extra step compared with the xAI build, whose voice agent has a built-in Gmail connector. Without one, the receptionist can still answer questions and take messages that land in Call History, but it can't alert anyone during the call, and it must not say it has.
 
 ## 1. Account
 1. Sign up at the [Retell dashboard](https://dashboard.retellai.com). You sign in yourself; never give an assistant your password.
@@ -82,64 +84,49 @@ In the agent's **Functions** section, **+ Add** ([function calling](https://docs
 - **End Call:** add it. By default the agent won't hang up on its own ([end call](https://docs.retellai.com/build/single-multi-prompt/end-call)). The kit's Wrap-up section tells it when to end the call. The prompt refers to it as `end_call` (**TODO: verify** the default name the dashboard gives it, and match the prompt to it).
 - **Transfer Call:** don't add it to the after-hours agent. See section 12.
 - **Press Digits, Send SMS:** not used.
-- **Your email alert function:** see section 7.
+- **Email alerts** aren't a function here; they come from an MCP server you attach in the **MCPs** section (section 7).
 
 ## 7. Email alerts during a call
-Retell's prebuilt functions don't include email, and its integrations cover CRMs, help desks, calendars and knowledge sources (HubSpot, Salesforce, Dynamics 365, GoHighLevel, Zoho, Zendesk, Google Drive, OneDrive, Notion, Calendly, Cal.com), not Gmail or Outlook ([integrations](https://docs.retellai.com/integrations/overview)). Retell's **alert rules** can email you, but only when an aggregate metric crosses a threshold, not for a single call ([alert rules](https://docs.retellai.com/features/alerting-overview)). So there is **no built-in way for the agent to send the kit's URGENT or Message email**. You add one of these:
+Retell's prebuilt functions don't include email, and its native integrations cover CRMs, help desks, calendars and knowledge sources (HubSpot, Salesforce, Dynamics 365, GoHighLevel, Zoho, Zendesk, Google Drive, OneDrive, Notion, Calendly, Cal.com), not Gmail or Outlook ([integrations](https://docs.retellai.com/integrations/overview)). Retell's **alert rules** can email you, but only when an aggregate metric crosses a threshold, not for a single call ([alert rules](https://docs.retellai.com/features/alerting-overview)). So there is **no built-in way for the agent to send the kit's URGENT or Message email**.
 
-### Option A (recommended): a custom function that calls an endpoint you control
-A [custom function](https://docs.retellai.com/build/single-multi-prompt/custom-function) makes an HTTPS request to your URL mid-call and hands the response back to the agent. Point it at a small endpoint that **sends exactly one email to your team inbox and nowhere else**. This is the "fixed-destination alert tool" that [`templates/alerts.md`](../../templates/alerts.md#risk) recommends: the model never chooses the recipient, so the one-recipient rule stops being prompt-level only.
+**This project doesn't build or maintain any code or endpoint for this.** Use an existing service instead: a hosted automation tool that exposes a Gmail "send email" action as an MCP server, which you attach to the agent. The two options below are **third-party services**, not maintained by this project. Each needs its own account and may cost money, and **neither has been tested with this kit yet (TODO: verify)**.
 
-Function settings (labels from Retell's custom function page):
-- **Name:** `send_team_email`. **Description:** "Send the one team email for this call (URGENT or Message), as described in the Email policy."
-- **Method:** POST. **API Endpoint:** your endpoint's HTTPS URL. Retell blocks localhost and private addresses.
-- **Timeout (ms):** something short such as 10000, so a hung endpoint fails fast (the default is 120000, two minutes). **TODO: verify** a good value with test calls.
-- **Retries:** leave `max_retry` at 0 (the default). The Instructions already allow one retry after a failure, and an automatic retry could send twice.
-- **Payload: args only:** on, so your endpoint gets only the fields below and not the call transcript.
-- **Parameters** (JSON schema):
+### How Retell attaches an MCP server (both options)
+A single-prompt agent can call tools on a remote MCP server during a call ([MCP tools](https://docs.retellai.com/build/single-multi-prompt/mcp)):
+1. In the agent editor, open the **MCPs** section and select **Add MCP**.
+2. Enter a name, the server URL, and the authentication under **Headers** (or **Query Parameters**). Save.
+3. Select **Add Tools** and pick **only** the send-email tool.
 
-```json
-{
-  "type": "object",
-  "required": ["kind", "body"],
-  "properties": {
-    "kind": {
-      "type": "string",
-      "enum": ["URGENT", "Message"],
-      "description": "URGENT for an urgent call, Message for a non-urgent call where you took a message"
-    },
-    "body": {
-      "type": "string",
-      "description": "Plain-text email body under 300 characters, in the exact format from the Email policy"
-    },
-    "call_id": {
-      "type": "string",
-      "const": "{{call_id}}"
-    }
-  }
-}
-```
+Limits from Retell's page: the server must be publicly reachable over Streamable HTTP; Retell **can't run an OAuth sign-in**, so the server must accept a fixed header or query parameter; failed tool calls aren't retried; tool results are capped at 15,000 characters. Retell's own MCP guide names Zapier and n8n as services you can connect this way ([Retell blog](https://www.retellai.com/blog/connect-any-ai-voice-agent-to-mcp-with-retell-ai-mcp-node)).
 
-  `const` values are filled in by Retell, not the model ([custom function](https://docs.retellai.com/build/single-multi-prompt/custom-function)). `{{call_id}}` is one of Retell's built-in [dynamic variables](https://docs.retellai.com/build/dynamic-variables). **TODO: verify** that it resolves inside `const` on a test call, and that the schema editor accepts `enum`. If it rejects `enum`, drop it and keep the description.
-- **Talk While Waiting:** off. **Talk After Action Completed:** on (the default), so the agent says "The team has been alerted" only after the result comes back.
-- **Headers:** add a shared value your endpoint checks, as a second check alongside signature verification.
+### Option 1: Zapier MCP (hosted)
+Zapier runs the MCP server for you; there's nothing to host.
+- **Authentication fits Retell.** Zapier MCP works with any client that uses Streamable HTTP. For clients that can't complete an OAuth flow, Zapier issues a **connection token**, sent either as an `Authorization` header (the word Bearer, a space, then the token; Zapier's recommended way) or as a query parameter in the server URL ([Zapier MCP authentication](https://docs.zapier.com/mcp/get-started/authentication), [connect](https://docs.zapier.com/mcp/get-started/connect)). Retell's MCP setting accepts exactly that kind of header, so the two should work together. **TODO: verify** with a test call.
+- **Set it up** (from [Zapier's help article](https://help.zapier.com/hc/en-us/articles/36265392843917-Use-Zapier-MCP-with-your-client) and [guide](https://zapier.com/blog/zapier-mcp-guide/)):
+  1. At mcp.zapier.com, create a **new MCP server** and choose **Other** as the client. Make a server just for the receptionist. Don't reuse one you connected to ChatGPT or Claude, because every tool on it becomes reachable through callers' conversations.
+  2. **Add tool:** Gmail, **Send Email** ([Zapier's Gmail MCP actions](https://zapier.com/mcp/gmail)). Connect the sending Gmail account yourself. As on xAI, a dedicated sending mailbox is safest.
+  3. Configure the action's fields (the ⋮ menu, then **Configure**): set **To** to your team inbox as a fixed value, leave cc and bcc empty, and let the AI fill only **Subject** and **Body**. **TODO: verify** the exact field options. If you can't fix **To**, the one-recipient rule is prompt-level only again.
+  4. On the server's **Connect** tab, select **Generate token** and copy it. Zapier shows it only once.
+  5. In Retell's **Add MCP**: URL `https://mcp.zapier.com/api/v1/connect`, header `Authorization` with the word Bearer, a space and the token. Type the token in yourself; never paste it into a chat with an assistant.
+- **Cost:** Zapier MCP has no separate fee; each **successful** tool call uses **2 tasks** from your Zapier plan's allowance, and failed calls use none. **When the allowance runs out, tool calls stop working** until it resets or you upgrade ([Zapier MCP usage](https://docs.zapier.com/mcp/features/usage)). The agent then reports a failed send honestly, but watch your task balance as you would Retell credits. Plan prices: [Zapier pricing](https://zapier.com/pricing).
 
-What the endpoint must do:
-1. Check the request is from Retell: verify the `X-Retell-Signature` header against the raw body with your Retell API key (Retell's SDKs include a verify helper), and check your shared header.
-2. Reject a `body` over 300 characters or a `kind` other than URGENT or Message.
-3. Send one plain-text email to the **fixed** team inbox, subject `URGENT: <Location>` or `Message: <Location>`. The recipient is hard-coded in the endpoint, never taken from the request.
-4. Allow **one successful send per call**: remember `call_id`, and if a second successful send arrives for the same call, return an error instead of sending again.
-5. Return a 2xx status with `{"ok": true}` only after your mail provider has accepted the email. Return a non-2xx status for every failure. Retell treats 200 to 299 as success and passes errors and timeouts to the agent ([custom function](https://docs.retellai.com/build/single-multi-prompt/custom-function)).
+### Option 2: n8n
+n8n is a workflow tool you can self-host or use as a hosted service.
+- **Authentication fits Retell.** n8n's **MCP Server Trigger** node turns a workflow into an MCP server. It supports Streamable HTTP and can require bearer-token or header authentication ([MCP Server Trigger](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-langchain.mcptrigger/)). Use the **production** URL, which n8n registers when you publish the workflow. **TODO: verify** with a Retell test call.
+- **Fix the recipient.** Each parameter of an n8n tool can be filled in by the model or set by you ([use AI for parameters](https://docs.n8n.io/advanced-ai/examples/using-the-fromai-function/)). Set the Gmail tool's **To** to your team inbox yourself, and let the model fill only the subject and message.
+- **Starting point:** the community template [AI-powered Gmail MCP server](https://n8n.io/workflows/3623-ai-powered-gmail-mcp-server/). Its description says it targets self-hosted n8n 1.88.0 or later, needs Gmail OAuth2 credentials (a Google Cloud project with the Gmail API enabled), and includes send, reply, get-email and send-and-wait tools. For this kit, **keep only the send tool** and delete the others, so nothing a caller says can lead to reading or replying to mail. It's a community template, not maintained by n8n, Retell or this project. **TODO: verify** that it works with Retell's MCP client as described.
+- **Retell's n8n integration is for the other direction.** [Retell's official n8n integration](https://www.retellai.com/integrations/n8n) is a node you install in n8n (**Settings → Community Nodes**) so n8n workflows can start Retell calls and fetch call results, for example after `call_analyzed`. That's useful after the call (Option 3), not for sending the in-call alert.
+- **Cost:** your n8n hosting or plan; this guide doesn't quote it.
 
-How to build it is up to you: a small serverless function, or a no-code automation that receives a webhook and sends one email to a fixed address. **We haven't built or tested one with Retell yet (TODO: verify)**, and this kit doesn't include a reference implementation. Some no-code tools can't verify Retell's signature; if yours can't, rely on the shared header and keep the endpoint URL private. Run tests F1 to F4 from [`templates/test-script.md`](../../templates/test-script.md) on a test copy of the agent before trusting it.
+### Settings and checks for either option
+- **One send per call** is a prompt rule, as on xAI. These services don't stop a second send for the same call.
+- **"Alerted" only after success.** The agent says "The team has been alerted" only when the tool returns success. Whether a Gmail failure inside Zapier or n8n comes back to Retell as a tool error (not a success) is **TODO: verify**. Test it with F1 to F4 below.
+- **Failure tests:** run F1 to F4 from [`templates/test-script.md`](../../templates/test-script.md) on a **separate test agent** whose MCP entry uses a deliberately wrong token, never on the live agent.
+- **Watching for failures:** Retell's alert rules include a "Custom function failures" metric. Whether failed MCP tool calls count toward it is **TODO: verify**; otherwise the daily review of Call History is your check.
+- Retell also supports **custom functions** that call any HTTPS URL, but that needs an endpoint someone writes and runs. This project doesn't provide one.
 
-Retell's **Code** tool can't do this job safely: Retell says not to put API keys or secrets in its code, variables or metadata ([code tool](https://docs.retellai.com/build/single-multi-prompt/code-tool)).
-
-### Option B: an MCP server with an email tool
-A single-prompt agent can call tools on a remote MCP server during a call ([MCP tools](https://docs.retellai.com/build/single-multi-prompt/mcp)): open the **MCPs** section, **Add MCP**, enter the name and URL, add auth under **Headers**, **Save**, then **Add Tools** and pick only the tools you want. Limits from that page: the server must be publicly reachable over Streamable HTTP; Retell **can't run an OAuth sign-in**, so the server must accept a fixed header or query parameter; failed tool calls aren't retried. If the email tool lets the model choose the recipient, the one-recipient rule is back to prompt-level only, so Option A is safer. **TODO: verify** any specific email MCP server with Retell before relying on it.
-
-### Option C: after the call only
-A post-call function on the agent's **Workflow** page, or a `call_analyzed` webhook, can send a summary to your endpoint after the call ends (section 8). That's useful for a "Message" email or a daily digest, but it runs after the caller hangs up, so the agent can never say "the team has been alerted" on the strength of it.
+### Option 3: after the call only
+A post-call function on the agent's **Workflow** page, a `call_analyzed` webhook, or Retell's Zapier or n8n integrations can send a summary after the call ends (section 8). That's useful for a "Message" email or a daily digest, but it runs after the caller hangs up, so the agent can never say "the team has been alerted" on the strength of it.
 
 ### Without any of these
 If you go live with no alert path, change the Email policy: the agent takes the message, never says the team has been alerted, and for urgent calls gives 911 guidance for danger and the approved alternative (or asks the caller to call back). Your daily review of Call History becomes the only alert. We don't recommend this for after-hours lines with real urgent calls.
@@ -148,10 +135,10 @@ If you go live with no alert path, change the Email policy: the agent takes the 
 Retell sends no xAI-style "Call completed" email. What it has instead:
 - **Call History** (under **Data** in the dashboard): one row per call with time, cost, duration, status, sentiment and phone numbers; each call has a recording, summary, transcript with tool calls and results, knowledge-base retrievals and detail logs. You can filter and export to CSV ([call history](https://docs.retellai.com/features/session-history)). This is the daily review's main source.
 - **Post call extraction** (agent editor): built-in `call_summary`, `user_sentiment`, `call_successful` and `in_voicemail`, plus custom fields you define ([post call extraction](https://docs.retellai.com/features/post-call-analysis-overview)). Suggested fields for this kit: `urgent` (boolean), `message_taken` (boolean), `caller_name` (text), `callback_number` (text), `reason` (text), and `team_email` (selector: urgent_sent, message_sent, failed, none). They make the review's email check faster. They're the model's reading of the transcript, so the transcript's tool results stay the source of truth.
-- **Webhooks:** `call_started`, `call_ended` and `call_analyzed` (plus transcript and transfer events) POSTed to your endpoint, with an `x-retell-signature` header, retried up to 3 times ([webhooks](https://docs.retellai.com/features/webhook-overview)). Optional.
+- **Webhooks:** `call_started`, `call_ended` and `call_analyzed` (plus transcript and transfer events) POSTed to a URL you choose (for example a Zapier or n8n webhook), with an `x-retell-signature` header, retried up to 3 times ([webhooks](https://docs.retellai.com/features/webhook-overview)). Optional.
 - **Workflow post-call functions** (agent editor, **Workflow**): run a custom function, code or SMS after the call, with access to `{{call_summary}}` and your extraction fields, and an "only when" gate ([agent workflow](https://docs.retellai.com/agent/agent-workflow)). Optional; see Option C above.
 - **Alert rules** (**Alerting** tab, **Create Alert**): email or webhook when an aggregate metric crosses a threshold, up to 10 rules per workspace ([alert rules](https://docs.retellai.com/features/alerting-overview)). Two that fit this kit:
-  - **Custom function failures** above 0 in the last 1 hour, checked every 5 minutes, filtered to the receptionist agent. That's an email to you soon after an alert email fails to send.
+  - **Custom function failures** above 0 in the last 1 hour, checked every 5 minutes, filtered to the receptionist agent. If failed MCP tool calls count toward this metric (TODO: verify, see section 7), that's an email to you soon after an alert email fails to send.
   - **Number of calls** below 1 in the last 24 hours, as a health check. It will fire on quiet days, so decide whether you want it.
 
 ## 9. Security and data settings
@@ -166,8 +153,8 @@ Retell has no free number, so your test number is a Retell number you buy.
 1. **Phone Numbers** tab, **Buy New Number**, optionally enter an area code, and purchase ([purchase number](https://docs.retellai.com/deploy/purchase-number)). US and Canada only. $2/month for a local number, $5/month toll-free (toll-free inbound also costs $0.06/min). The fee recurs until you release the number.
 2. Select the number, set its **Inbound agent** to the receptionist and choose the version to test. A draft works; you don't have to publish first ([phone call testing](https://docs.retellai.com/test/test-phone)). Leave the outbound agent unset.
 3. **Browser tests first:** the **Test** button starts a web call (needs a microphone). Retell's quick start says this step is free, but its testing-pricing page says web calls bill at the normal voice rate (**TODO: verify** which applies). The **LLM Playground** and simulation tests are text and bill per message ([testing overview](https://docs.retellai.com/test/test-overview), [testing pricing](https://docs.retellai.com/test/testing-pricing)).
-4. **Phone tests (required):** call the number from your cell and run the whole [`templates/test-script.md`](../../templates/test-script.md). On Retell, replace check **(E)** (xAI's post-call email) with: the call appears in Call History with a recording, transcript and summary. Check **(A)** depends on your section 7 option: one successful `send_team_email` result per qualifying call, and the email in the team inbox.
-5. Run F1 to F4 on a **separate test agent** with its own number and a deliberately broken endpoint, never the live one. Release that number when you're done.
+4. **Phone tests (required):** call the number from your cell and run the whole [`templates/test-script.md`](../../templates/test-script.md). On Retell, replace check **(E)** (xAI's post-call email) with: the call appears in Call History with a recording, transcript and summary. Check **(A)** depends on your section 7 option: one successful email-tool result per qualifying call, and the email in the team inbox.
+5. Run F1 to F4 on a **separate test agent** with its own number and an MCP entry that uses a deliberately wrong token, never the live one. Release that number when you're done.
 
 This never touches your existing phone line. Nobody reaches the agent unless they dial the Retell number.
 
@@ -204,7 +191,7 @@ From [Retell's pricing page](https://www.retellai.com/pricing), checked 2026-09-
 
 Retell sums voice AI at **$0.07 to $0.31 per minute** depending on model and voice, before telephony ([testing pricing](https://docs.retellai.com/test/testing-pricing)).
 
-**Worked example** (our assumptions, not a quote): platform voice, a model at $0.04/min, a Retell US number and a knowledge base: $0.055 + $0.015 + $0.04 + $0.015 + $0.005 = **$0.13/min**. A 2-minute call is **$0.26**, a 3-minute call **$0.39**, plus $2/month for the number. The $10 trial credit covers roughly 75 minutes at that rate. Long prompts can raise this (the 4,000-token rule in section 3). Your forwarding phone plan may charge for the forwarded leg too, and your email endpoint has its own costs.
+**Worked example** (our assumptions, not a quote): platform voice, a model at $0.04/min, a Retell US number and a knowledge base: $0.055 + $0.015 + $0.04 + $0.015 + $0.005 = **$0.13/min**. A 2-minute call is **$0.26**, a 3-minute call **$0.39**, plus $2/month for the number. The $10 trial credit covers roughly 75 minutes at that rate. Long prompts can raise this (the 4,000-token rule in section 3). Your forwarding phone plan may charge for the forwarded leg too, and Zapier (2 tasks per successful send) or n8n costs are separate.
 
 For comparison, the xAI build's published rate is about $0.09/min on its free number (see the [README](../../README.md#what-it-costs)).
 
@@ -220,18 +207,19 @@ Use this in place of the Console section of [`docs/go-live-checklist.md`](../../
 - [ ] Instructions pasted with the changes in [prompt-changes.md](prompt-changes.md); after reload, first and last lines match
 - [ ] Welcome message: AI speaks first, Custom message, `welcome.txt` word for word
 - [ ] Knowledge base: in-scope `kb/*.md` only, attached under Knowledge base & memory
-- [ ] Functions: End Call, plus `send_team_email` (or your MCP tool); no Transfer Call after hours
+- [ ] Functions: End Call; no Transfer Call after hours
+- [ ] MCPs: a receptionist-only Zapier or n8n server, with only the Gmail send tool added and **To** fixed to the team inbox
 - [ ] Email path tested end to end by phone: one successful send per qualifying call, to the team inbox only, and F1 to F4 passed on a test copy
 - [ ] Post call extraction fields added
 - [ ] Data retention chosen and written down; Retell guardrail topics decided (self_harm off unless tested)
-- [ ] Alert rule for custom function failures; auto recharge or a daily balance check
+- [ ] Alert rule for failures (if MCP failures count); auto recharge or a daily balance check, for Retell credits and Zapier tasks
 - [ ] Test number bought; inbound agent set; outbound agent unset
 - [ ] Whole test script passed by phone; results in `test-results.md`
 - [ ] Version published (or the tested draft noted), and the `prod` tag points at it
 
 ## Limits
 - **Untested by us.** This guide is from docs, not a deployment.
-- **No built-in email.** Alerts need an endpoint or MCP server you run (section 7).
+- **No built-in email.** In-call alerts need a third-party automation account (Zapier or n8n) attached as an MCP server (section 7).
 - **No free number.** Testing needs a card and a $2/month number.
 - **Prompt length affects price** past 4,000 tokens of context.
 - **Data is kept forever** unless you set retention.
@@ -242,16 +230,18 @@ Use this in place of the Console section of [`docs/go-live-checklist.md`](../../
 1. `{{user_number}}` on a forwarded call: the original caller or your business number?
 2. The real prompt token count of the kit's Instructions on Retell, and whether calls cross the 4,000-token billing threshold.
 3. The default name of the End Call function in the dashboard (the prompt assumes `end_call`).
-4. A good custom-function timeout for the email endpoint.
-5. Whether `{{call_id}}` resolves in a `const` parameter, and whether the schema editor accepts `enum`.
-6. A working email endpoint (Option A): none built or tested with Retell yet.
-7. Any specific email MCP server (Option B) with Retell.
-8. Whether Retell's self_harm output guardrail would block the 988 guidance.
-9. Whether dashboard web-call tests are free (quick start) or billed (testing pricing).
-10. Porting an existing number into Retell-managed telephony.
-11. The Retell ChatGPT app's actual tool list and permissions.
+4. Zapier MCP with Retell end to end: the connection token in Retell's MCP header works, and the Gmail Send Email tool appears under Add Tools.
+5. Zapier's field configuration: that **To** can be fixed to one address (and cc and bcc left empty) so the model can't change it.
+6. n8n's MCP Server Trigger with Retell end to end (bearer-token or header authentication).
+7. The n8n community Gmail MCP template: that it works with Retell's MCP client once trimmed to the send tool.
+8. Whether a failed Gmail send inside Zapier or n8n reaches the agent as a tool error, not a success.
+9. Whether failed MCP tool calls count toward Retell's "Custom function failures" alert metric.
+10. Whether Retell's self_harm output guardrail would block the 988 guidance.
+11. Whether dashboard web-call tests are free (quick start) or billed (testing pricing).
+12. Porting an existing number into Retell-managed telephony.
+13. The Retell ChatGPT app's actual tool list and permissions.
 
 ## Sources
-All read on 2026-09-30 (PT): [quick start](https://docs.retellai.com/get-started/quick-start), [basic settings](https://docs.retellai.com/build/single-multi-prompt/configure-basic-settings), [agent types](https://docs.retellai.com/build/choose-agent-type), [versions](https://docs.retellai.com/agent/version), [dynamic variables](https://docs.retellai.com/build/dynamic-variables), [knowledge base](https://docs.retellai.com/build/knowledge-base), [function calling](https://docs.retellai.com/build/single-multi-prompt/function-calling), [end call](https://docs.retellai.com/build/single-multi-prompt/end-call), [transfer call](https://docs.retellai.com/build/single-multi-prompt/transfer-call), [custom function](https://docs.retellai.com/build/single-multi-prompt/custom-function), [code tool](https://docs.retellai.com/build/single-multi-prompt/code-tool), [MCP tools](https://docs.retellai.com/build/single-multi-prompt/mcp), [send SMS](https://docs.retellai.com/build/single-multi-prompt/send-sms), [integrations](https://docs.retellai.com/integrations/overview), [agent workflow](https://docs.retellai.com/agent/agent-workflow), [post call extraction](https://docs.retellai.com/features/post-call-analysis-overview), [webhooks](https://docs.retellai.com/features/webhook-overview), [alert rules](https://docs.retellai.com/features/alerting-overview), [call history](https://docs.retellai.com/features/session-history), [guardrails](https://docs.retellai.com/build/guardrails), [data retention](https://docs.retellai.com/accounts/data-retention), [purchase number](https://docs.retellai.com/deploy/purchase-number), [receive calls](https://docs.retellai.com/deploy/inbound-call), [custom telephony](https://docs.retellai.com/deploy/custom-telephony), [phone call testing](https://docs.retellai.com/test/test-phone), [testing pricing](https://docs.retellai.com/test/testing-pricing), [billing](https://docs.retellai.com/accounts/billing), [billing exceptions](https://docs.retellai.com/accounts/billing-exceptions), [KYC](https://docs.retellai.com/accounts/kyc), [API keys](https://docs.retellai.com/accounts/manage-api-keys), [Retell MCP server](https://docs.retellai.com/get-started/mcp-server), [pricing](https://www.retellai.com/pricing).
+All read on 2026-09-30 (PT): [quick start](https://docs.retellai.com/get-started/quick-start), [basic settings](https://docs.retellai.com/build/single-multi-prompt/configure-basic-settings), [agent types](https://docs.retellai.com/build/choose-agent-type), [versions](https://docs.retellai.com/agent/version), [dynamic variables](https://docs.retellai.com/build/dynamic-variables), [knowledge base](https://docs.retellai.com/build/knowledge-base), [function calling](https://docs.retellai.com/build/single-multi-prompt/function-calling), [end call](https://docs.retellai.com/build/single-multi-prompt/end-call), [transfer call](https://docs.retellai.com/build/single-multi-prompt/transfer-call), [custom function](https://docs.retellai.com/build/single-multi-prompt/custom-function), [code tool](https://docs.retellai.com/build/single-multi-prompt/code-tool), [MCP tools](https://docs.retellai.com/build/single-multi-prompt/mcp), [send SMS](https://docs.retellai.com/build/single-multi-prompt/send-sms), [integrations](https://docs.retellai.com/integrations/overview), [agent workflow](https://docs.retellai.com/agent/agent-workflow), [post call extraction](https://docs.retellai.com/features/post-call-analysis-overview), [webhooks](https://docs.retellai.com/features/webhook-overview), [alert rules](https://docs.retellai.com/features/alerting-overview), [call history](https://docs.retellai.com/features/session-history), [guardrails](https://docs.retellai.com/build/guardrails), [data retention](https://docs.retellai.com/accounts/data-retention), [purchase number](https://docs.retellai.com/deploy/purchase-number), [receive calls](https://docs.retellai.com/deploy/inbound-call), [custom telephony](https://docs.retellai.com/deploy/custom-telephony), [phone call testing](https://docs.retellai.com/test/test-phone), [testing pricing](https://docs.retellai.com/test/testing-pricing), [billing](https://docs.retellai.com/accounts/billing), [billing exceptions](https://docs.retellai.com/accounts/billing-exceptions), [KYC](https://docs.retellai.com/accounts/kyc), [API keys](https://docs.retellai.com/accounts/manage-api-keys), [Retell MCP server](https://docs.retellai.com/get-started/mcp-server), [pricing](https://www.retellai.com/pricing), [Retell MCP blog](https://www.retellai.com/blog/connect-any-ai-voice-agent-to-mcp-with-retell-ai-mcp-node), [Retell n8n integration](https://www.retellai.com/integrations/n8n). Third-party: [Zapier MCP authentication](https://docs.zapier.com/mcp/get-started/authentication), [Zapier MCP connect](https://docs.zapier.com/mcp/get-started/connect), [Zapier MCP usage](https://docs.zapier.com/mcp/features/usage), [Zapier MCP with your client](https://help.zapier.com/hc/en-us/articles/36265392843917-Use-Zapier-MCP-with-your-client), [Zapier MCP guide](https://zapier.com/blog/zapier-mcp-guide/), [Zapier Gmail MCP actions](https://zapier.com/mcp/gmail), [n8n MCP Server Trigger](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-langchain.mcptrigger/), [n8n AI parameters](https://docs.n8n.io/advanced-ai/examples/using-the-fromai-function/), [n8n Gmail MCP template](https://n8n.io/workflows/3623-ai-powered-gmail-mcp-server/).
 
-*Not affiliated with Retell AI. "Retell" is a trademark of its owner.*
+*Not affiliated with Retell AI, Zapier or n8n. Product names belong to their owners.*

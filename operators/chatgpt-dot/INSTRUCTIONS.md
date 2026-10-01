@@ -5,6 +5,8 @@ This one file gets you from a brand-new ChatGPT dot to a **test** AI receptionis
 - **Part A** is for you, the owner: set up the dot, connect two plugins, and paste Part B.
 - **Part B** is for the assistant: the operator instructions. It works the same in ChatGPT, Claude or any assistant that can reach Retell.
 
+> **Before you start:** the simpler path is [Grok Bot with xAI's Grok Voice Agents](../grok-bot/README.md). xAI's voice agent has a built-in Gmail connector for in-call alerts, and the Grok Bot template sets everything up. Use this guide if you'd rather work in ChatGPT. It takes more manual setup, and in-call email alerts need a third-party automation account (Zapier or n8n).
+
 > **Status:** written from OpenAI's and Retell's public docs on 2026-09-30 (PT). Not yet run end to end. Steps we couldn't confirm in public docs are marked **TODO: verify**. If a menu looks different, go by what you see.
 
 ## Part A: owner setup (about an hour, plus test calls)
@@ -15,6 +17,7 @@ This one file gets you from a brand-new ChatGPT dot to a **test** AI receptionis
 - **A Retell AI account.** You sign up yourself at the [Retell dashboard](https://dashboard.retellai.com). New accounts get $10 of free credit. A test number costs **$2/month** and needs a card on file ([quick start](https://docs.retellai.com/get-started/quick-start)). Test calls bill at normal rates, about $0.13 a minute in our [worked example](../../platforms/retell/README.md#cost).
 - **The Gmail account that receives your team inbox**, so the dot can check that test alerts arrived. Read access only.
 - **Your cell phone** for test calls.
+- **Later, before real callers:** a Zapier or n8n account for in-call email alerts. These are third-party services, not part of this project; the [Retell guide](../../platforms/retell/README.md#7-email-alerts-during-a-call) shows how to attach one. You don't need it for the first test.
 
 ### A2. Create your dot
 From OpenAI's [getting started](https://learn.chatgpt.com/docs/dots/getting-started) page:
@@ -53,7 +56,7 @@ Dots take instructions in the conversation ([dots](https://learn.chatgpt.com/doc
 ### A6. What happens next
 1. **Interview.** The dot asks one question at a time: business name, address, hours, holidays, parking, what counts as urgent, your team inbox, and the exact recording sentence.
 2. **Your files.** It writes `intake.md`, the Instructions (`prompt.md`, already adapted for Retell), `welcome.txt` and the `kb/` files, and shows them to you. Read them; fix anything wrong.
-3. **Email alerts.** It explains that Retell has no built-in email tool, and you choose one of the options in the [Retell guide](../../platforms/retell/README.md#7-email-alerts-during-a-call). For a first test, it's fine to build without alerts. The Instructions then never claim anyone was alerted. Add alerts before any real caller reaches the agent.
+3. **Email alerts.** It explains that Retell has no built-in email tool. In-call alerts come from an existing third-party service you sign up for, Zapier MCP or n8n, attached to the agent as an MCP server ([Retell guide, section 7](../../platforms/retell/README.md#7-email-alerts-during-a-call)). Nobody writes code for this. For a first test, it's fine to build without alerts. The Instructions then never claim anyone was alerted. Add alerts before any real caller reaches the agent. You create the Zapier or n8n server and enter its token in Retell yourself.
 4. **Test agent.** With your OK at each step, it creates a Retell agent named "TEST <Business> Receptionist" and fills in the Instructions, the Welcome message (fixed text), the knowledge base and the End Call function. Whatever the Retell plugin can't set, it walks you through in the Retell dashboard (TODO: verify which settings the plugin can set).
 5. **Test number (you do this).** In the Retell dashboard, open **Phone Numbers**, choose **Buy New Number**, and buy one ($2/month). Then set its **Inbound agent** to the test agent ([purchase number](https://docs.retellai.com/deploy/purchase-number), [phone call testing](https://docs.retellai.com/test/test-phone)). The dot doesn't buy anything.
 6. **Test calls (you make them).** Call the Retell number from your cell. The dot gives you the scripted calls from the [test script](../../templates/test-script.md) one at a time, then reads the results in Retell's Call History (if the plugin can; otherwise export from **Call History** and upload). It writes up `test-results.md`.
@@ -106,7 +109,7 @@ Write and show the owner, for review:
 Fix anything the owner corrects before building.
 
 ### Step 3: email alerts
-Explain plainly: Retell has no built-in email tool. Walk through the options in section 7 of `platforms/retell/README.md` and let the owner choose. The default for a first test is **no alert path**: use the "Without any of these" wording, so the agent never says anyone was alerted. If the owner has an endpoint, add the `send_team_email` custom function exactly as the guide describes. Never point an alert tool at any address but the team inbox.
+Explain plainly: Retell has no built-in email tool. Walk through the options in section 7 of `platforms/retell/README.md` and let the owner choose. The options are existing third-party services the owner signs up for (Zapier MCP or n8n), not code to write. Don't offer to build an endpoint or write code. The default for a first test is **no alert path**: use the "Without any of these" wording, so the agent never says anyone was alerted. If the owner has set up a Zapier or n8n MCP server as the guide describes, the owner enters its URL and token in Retell themselves; then, with approval, add only its Gmail send tool to the agent. The recipient (**To**) must be fixed to the team inbox in Zapier or n8n. Never point an alert tool at any address but the team inbox.
 
 ### Step 4: build the test agent (with approval for each change)
 Following `platforms/retell/README.md`, sections 2 to 6 and 9:
@@ -114,14 +117,14 @@ Following `platforms/retell/README.md`, sections 2 to 6 and 9:
 2. Paste `prompt.md`. Ask the owner to reload and check that the first and last lines match.
 3. Welcome message: AI speaks first, Custom message, `welcome.txt` word for word.
 4. Knowledge base from `kb/*.md`, attached to the agent.
-5. End Call function. No Transfer Call. No other functions unless the owner chose an alert option.
+5. End Call function. No Transfer Call, no other functions. If the owner set up Zapier or n8n alerts, add only that MCP server's Gmail send tool (Step 3).
 6. Data retention: ask the owner how long to keep calls (Retell's default is forever).
 7. Leave Retell's guardrail topics off unless the owner wants them. The self_harm topic could block the 988 guidance.
 If the Retell plugin or MCP server can't set something, give the owner short dashboard steps instead, using the labels from the guide.
 
 ### Step 5: test number and calls
 1. Ask the owner to buy a test number in the Retell dashboard and set its **Inbound agent** to the test agent (a draft version is fine).
-2. Give the owner the test calls from `templates/test-script.md` one at a time. On Retell, check (E) means: the call shows in Call History with a recording, transcript and summary. Skip F1 to F4 unless the owner set up an alert endpoint; those need a separate test agent with a broken endpoint.
+2. Give the owner the test calls from `templates/test-script.md` one at a time. On Retell, check (E) means: the call shows in Call History with a recording, transcript and summary. Skip F1 to F4 unless the owner set up Zapier or n8n alerts; those need a separate test agent whose MCP entry uses a deliberately wrong token.
 3. After each call, read it in Call History (or ask the owner to export and upload) and record pass or fail in `test-results.md`. Flag any time the agent claimed an alert or a follow-up without a successful send.
 4. Fix failures with the smallest Instructions change, with approval, and re-run that test.
 

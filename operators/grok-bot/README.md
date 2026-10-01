@@ -1,6 +1,6 @@
 # Operator: Grok Bot
 
-Grok Bot is the original operator, and it pairs with xAI's Grok Voice Agent Builder. Nothing about it changed in the multi-platform layout.
+Grok Bot is the original operator, and it pairs with xAI's Grok Voice Agent Builder. It's the **simplest and recommended path**: xAI's voice agent has a built-in Gmail connector for the in-call URGENT and Message emails, and the Grok Bot template interviews you and sets it all up. It's also the path tested on a real line. Nothing about it changed in the multi-platform layout.
 
 [![Add Answering Machina to Grok Bot](https://img.shields.io/badge/Add_Answering_Machina-to_Grok_Bot-black?style=for-the-badge)](https://x.ai/bot/FUSB3whX23EEO5aiyTk0P)
 
