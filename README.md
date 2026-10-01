@@ -6,7 +6,7 @@
 
 [![Add Answering Machina to Grok Bot](https://img.shields.io/badge/Add_Answering_Machina-to_Grok_Bot-black?style=for-the-badge)](https://x.ai/bot/FUSB3whX23EEO5aiyTk0P)
 
-> **v0.1, early release:** running on one real business line so far; test on the free xAI number and complete the [go-live checklist](docs/go-live-checklist.md) before you route yours (see [Known limits](#known-limits)).
+> **v0.1, early release:** running at one real business so far, on the main lines at its two locations; test on the free xAI number and complete the [go-live checklist](docs/go-live-checklist.md) before you route yours (see [Known limits](#known-limits)).
 
 ## Choose your setup
 Pick the AI assistant you already use (the **operator**) and the voice AI that answers the phone (the **platform**). The receptionist's design, rules and tests are the same either way ([the core](core/README.md)).
@@ -17,7 +17,7 @@ Pick the AI assistant you already use (the **operator**) and the voice AI that a
 
 | You use | Voice platform | Status | Start here |
 |---|---|---|---|
-| **Grok Bot** (recommended) | xAI Grok Voice Agent Builder | Tested on one real line. Built-in Gmail alerts | The **Add** button above, then the [Quick start](#quick-start) |
+| **Grok Bot** (recommended) | xAI Grok Voice Agent Builder | Live at one business, on two main lines. Built-in Gmail alerts | The **Add** button above, then the [Quick start](#quick-start) |
 | **ChatGPT** (a dot, a project or a regular chat) | Retell AI | New. Written from OpenAI's and Retell's docs, not yet tested by us. Email alerts need Zapier or n8n | [operators/chatgpt-dot/INSTRUCTIONS.md](operators/chatgpt-dot/INSTRUCTIONS.md) |
 | **Claude** (claude.ai, Claude Desktop, Claude Code) or another MCP assistant | Retell AI | New, not yet tested by us. Email alerts need Zapier or n8n | [operators/claude](operators/claude/README.md) |
 | No assistant | Either | | [platforms/](platforms/README.md) |
@@ -42,7 +42,7 @@ Getting to those numbers took some cleanup. Almost half of the raw phone records
 
 We built **Tess**, an AI receptionist, on xAI's [Grok Voice Agent Builder](https://x.ai/news/grok-voice-agent-builder), and we did it in one day with Grok Bot. Grok Bot interviewed me about the business, drafted Tess's script and knowledge base, and built the agent in the xAI console while I watched. Then it tested her on a free phone number, well away from our real lines.
 
-Tess now answers our Redmond main line in two ways. Our phone system decides when she gets a call and forwards it to her free xAI number. After hours and on the holidays listed in our phone system, she's the first to pick up. During open hours (Monday to Friday, 8 AM to 4 PM), calls ring the front desk for about 20 seconds (roughly 4 rings), and if nobody picks up, the call goes to Tess instead of voicemail. It's one agent, not a separate daytime agent, with a time-aware prompt and a greeting that works at any hour: she checks the time, and during the day she says the team is busy helping others instead of saying we're closed. She:
+Tess now answers the main lines at both our locations, Seattle and Redmond, in two ways. Our phone system decides when she gets a call and forwards it to her free xAI number. After hours and on the holidays listed in our phone system, she's the first to pick up. During open hours (Monday to Friday, 8 AM to 4 PM), calls ring the front desk for about 20 seconds (roughly 4 rings), and if nobody picks up, the call goes to Tess instead of voicemail. It's one agent, not a separate daytime agent, with a time-aware prompt and a greeting that works at any hour: she checks the time, and during the day she says the team is busy helping others instead of saying we're closed. She:
 - answers questions about our hours, directions and parking, and takes a message for everything else, pricing included,
 - takes a message, spelling the caller's name back and reading their number back, and emails it to our team inbox right away,
 - sends an urgent alert email when a call can't wait, like a member locked out of the building, and says the team has been alerted only after that email actually sends,
@@ -50,11 +50,13 @@ Tess now answers our Redmond main line in two ways. Our phone system decides whe
 
 She doesn't transfer calls yet.
 
-Next, we'll round out what she knows and let her route calls to the right person. A second location is being prepared.
+Next, we'll round out what she knows, let her route calls to the right person, and look at our door call boxes (see [Next: door call boxes](#next-door-call-boxes)).
 
-**Where it stands (as of 2026-09-29, 10 PM PT):** Tess passed end-to-end phone tests on her free xAI number on 2026-09-29, and the urgent alert and the post-call email both arrived. That same night she went live on our Redmond main line after hours, and a real test call to the main line after hours reached her. We also turned on daytime backup that first night. That was my call as the owner, and it's sooner than this kit recommends (run after hours only for a week or two first). To make it work with one agent, we changed her prompt to check the time and adjust its wording. The daytime path is configured, but we haven't verified it with a real call yet; that test is planned for the morning of 2026-09-30. We made each routing change only with an owner's OK and a written rollback plan.
+**Where it stands (as of 2026-09-30, end of day PT):** Tess is live at both locations. She answers after hours and takes daytime calls the desk doesn't pick up within about 20 seconds. Sep 30 was the first full day live at both, and the results are under [Day one](#day-one-sep-30-2026). Getting here: she passed end-to-end phone tests on her free xAI number on 2026-09-29, and the urgent alert and the post-call email both arrived. That same night she went live on our Redmond main line after hours, and a real test call to the main line after hours reached her. We also turned on daytime backup that first night. That was my call as the owner, and it's sooner than this kit recommends (run after hours only for a week or two first). To make it work with one agent, we changed her prompt to check the time and adjust its wording. On Sep 30 the daytime path took its first real calls. We made each routing change only with an owner's OK and a written rollback plan.
 
-For the first two weeks, Grok Bot runs a review every weekday at 7 AM. It reads the emails, scores every transcript, and checks that the agent is Live, its number is attached and there's credit left (it warns us under $5, or on a weekday with no calls). It drafts fixes, and nothing changes without my OK. We don't have results from real callers yet, and we won't claim any until we do.
+On our line, every real call now produces exactly one email to the team: an urgent alert, a message, or a short recap. Spam, wrong numbers and instant hang-ups get none. The short recap for answer-only calls isn't in the kit's templates yet; they still follow the [email policy](#guidelines) below.
+
+For the first two weeks, Grok Bot runs a review every weekday at 7 AM. It reads the emails, scores every transcript, and checks that the agent is Live, its number is attached and there's credit left (it warns us under $5, or on a weekday with no calls). It drafts fixes, and nothing changes without my OK. We have one day of real-caller results so far (see [Day one](#day-one-sep-30-2026)), and we won't claim more than we've counted.
 
 **Proving it worked cost almost nothing.** We started with $10 of xAI credit, built Tess, got a free test number, and made our first five real phone test calls. The console showed $0.37 of usage for all of them. We didn't connect our real business line, buy any equipment or hire anyone to set it up until those tests passed.
 
@@ -67,7 +69,42 @@ For the first two weeks, Grok Bot runs a review every weekday at 7 AM. It reads 
 - how many messages led to a completed follow-up,
 - the real cost, and the time we spent reviewing calls.
 
-No caller names, numbers or call content, and no figures until we have real ones.
+No caller names, numbers or call content, and only figures we've actually counted.
+
+### Day one: Sep 30, 2026
+
+Sep 30 was our first full day with Tess live at both locations. These figures come from our phone system's call log joined with the AI's call list in the xAI console. They count real outside calls on our two main lines, and leave out door buzzers, my own test calls and an automated listing-check bot.
+
+| Location | Real calls | Callers | Answered by staff | Went to the AI | Went to voicemail |
+|---|---|---|---|---|---|
+| Seattle | 8 | 5 | 6 | 2 | 0 |
+| Redmond | 6 | 5 | 5 | 1 | 0 |
+
+The desk picked up most calls itself, the AI took the ones it couldn't get to in time, and nothing went to voicemail on either main line. The AI's 3 real calls:
+- a vendor confirming an appointment: Tess took the message and emailed it to the team,
+- the same vendor calling again,
+- a first-time caller who hung up during the greeting, 13 seconds in.
+
+There were no urgent calls and no after-hours calls. One day is a small sample, so read this as a first look, not a result.
+
+**What day one taught us:**
+- **Forwarded calls show your own number.** When our phone system forwards a call, the AI sees the business's own number as the caller ID, not the caller's. It only gets the real number by asking, which is one more reason it reads the number back on every message.
+- **Keep the AI's own email as the record of truth.** For a window of roughly six hours, some conversations weren't saved in the xAI console, but the AI's own emails kept working.
+- **Bots call too.** An automated listing-check bot called twice and just said "Hello?" over and over. The AI correctly sent no recap.
+- **Join the two logs.** The AI's call list only shows the calls it got. Joining it with the phone system's call log is what gives the real picture. We first misread a quiet stretch as missing data; the log showed staff had simply answered everything.
+
+## Next: door call boxes
+
+Our two door call boxes ring the front desk too. From our phone system's records for **Jan 1 – Sep 30, 2026**:
+
+- **The boxes rang 3,962 times**, about 20 buzzes per weekday across both sites.
+- **Staff answered about 3,500.** Talk time was only about 14.6 hours for the year so far (12 to 17 seconds on average), but each pickup is an interruption to whatever else they're doing.
+- **457 buzzes went unanswered**, about 51 a month. After an unanswered buzz, the box rang again within 2 minutes 23–30% of the time: someone was still waiting at the door.
+- **563 buzzes came after hours.**
+
+It's the same coverage problem as the phones: the people who answer the door are also greeting members, giving tours and handling deliveries.
+
+The first door buzz that reached Tess got the normal phone greeting, and the visitor gave up without saying anything. Door calls need their own greeting. Staff let visitors in by pressing a digit on the phone keypad, so the next test is whether the AI can send that tone, along with a rule for who it may let in. **AI door unlocking is untested.** Until it's tested, the kit's rule stands: the receptionist can't unlock doors, give codes or change access.
 
 ## Guidelines
 
@@ -87,12 +124,14 @@ Answering Machina packages everything we learned into a kit you can reuse for yo
 - **Callers get an answer instead of voicemail.** They hear your hours, directions and parking, or leave a properly taken message.
 - **Messages and urgent calls reach you right away**, as one short email to the team inbox you pick.
 - **Your phone system stays in charge.** The AI only gets the calls you route to it, and your routing changes only when you say so.
-- **Every call can be reviewed.** Every call leaves a recording and transcript in the xAI console (kept 30 days), and each phone call that lasts at least the minimum you set triggers a metadata-only "Call completed" email. Grok Bot can review them every weekday morning.
+- **Every call can be reviewed.** Every call should leave a recording and transcript in the xAI console (kept 30 days; see [Known limits](#known-limits) for a gap we hit), and each phone call that lasts at least the minimum you set triggers a metadata-only "Call completed" email. Grok Bot can review them every weekday morning.
 - **It's cheap to run.** At xAI's published rates, a call on the free number costs about 9 cents a minute (see [What it costs](#what-it-costs)).
 
 ## What it costs
 
 **Our early number:** our first five real phone test calls, on the free xAI number, cost **$0.37 total** out of $10 of starter credit. That's what we saw, not a rate. It's lower than xAI's published $0.09 a minute would predict, and we haven't worked out why, so budget from the published rate. After a full day of building and testing, including browser test sessions, we had about $9 of the $10 left. The smallest credit top-up xAI allows is $5 (as of Sep 29, 2026), so that's the real minimum to start.
+
+**Our first full day live (Sep 30, 2026):** the AI took 12 calls across both locations, test calls included. Estimated from call durations at the published $0.09 a minute, that's about **$1.04 for the day**, and about **$0.10** for the real calls. These are estimates from durations, not billed amounts.
 
 **xAI's published rate:** $0.08 per minute of audio, plus $0.01 per minute on the free phone number ([xAI pricing](https://docs.x.ai/developers/pricing), [Voice Agent Builder announcement](https://x.ai/news/grok-voice-agent-builder)). That's $0.18 for a 2-minute call and $0.27 for a 3-minute call. For more detail and what we haven't verified, see [Cost details](#cost-details).
 
@@ -117,7 +156,7 @@ Prices change, so check the links before you decide. These services set things u
 - **Phone systems**: anything that can forward calls to an outside number. Tested on a NetSapiens-based hosted PBX. Setup steps are documented, but not yet tested by us, for Google Voice for Google Workspace, RingCentral, and AT&T, Verizon and T-Mobile conditional forwarding (see [docs/phone-systems.md](docs/phone-systems.md)). The free personal Google Voice can't forward to the agent, because forwarding needs a verification code step the agent can't complete.
 
 ## Known limits
-- **Early release (v0.1).** One real deployment so far. Expect rough edges.
+- **Early release (v0.1).** One real deployment so far (one business, two locations). Expect rough edges.
 - **Retell support is untested.** xAI is the only platform running on a real line. The Retell guide and the ChatGPT and Claude operator instructions come from public docs and list open "TODO: verify" items. Retell also has no built-in email tool, so in-call alerts need a third-party automation account, Zapier or n8n (see [platforms/retell](platforms/retell/README.md#7-email-alerts-during-a-call)).
 - **No live transfers yet.** The receptionist takes messages instead of connecting callers to staff. The **business-hours-mode** playbook describes optional daytime transfers, but we haven't tested them.
 - **English only.** We've only tested English. The template tells the agent to reply in the caller's language if it can, so check that line in the Instructions first, and test any other language before you rely on it.
@@ -125,7 +164,11 @@ Prices change, so check the links before you decide. These services set things u
 - **A call can fail silently if your xAI credit runs out.** Turn on auto top-up in the xAI console's billing settings, or set up a low-credit check, and do the daily health check in the [go-live checklist](docs/go-live-checklist.md).
 - **Post-call emails from xAI carry no transcript** (and no summary). Transcripts stay in the console for 30 days.
 - **Recipient restriction is prompt-level only.** The Instructions tell the agent to email only your team inbox. Send-only access limits which actions the agent has, but not who it sends to. Unless you configure and verify an independent recipient allowlist, a persuasive caller or a model mistake could get an email sent to another address. A fixed-destination alert tool (a webhook, or a sending account that can only reach one address) is the better design; see the Risk section in [templates/alerts.md](templates/alerts.md#risk).
-- **Results from real callers aren't published yet.** See [What we'll measure](#what-well-measure).
+- **Forwarded calls hide the caller's number.** When your phone system forwards a call, the AI may see your business's own number as the caller ID. It only gets the caller's real number by asking, so keep the read-back step.
+- **The console can miss conversations.** On our first full day, some conversations weren't saved in the xAI console for roughly six hours, while the AI's own emails kept working. Treat the AI's email to the team as the record of truth.
+- **Bots call too.** Automated callers, like a listing-check bot that just says "Hello?", will reach the AI. Expect them in your counts, and check that they get no email.
+- **Door call boxes aren't supported yet.** A door buzz that reaches the AI gets the regular phone greeting, and the AI can't unlock doors. See [Next: door call boxes](#next-door-call-boxes).
+- **Only one day of real-caller results so far.** See [Day one](#day-one-sep-30-2026) and [What we'll measure](#what-well-measure).
 
 More technical detail is under [Limitations](#limitations).
 
