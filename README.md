@@ -18,7 +18,7 @@ Pick the AI assistant you already use (the **operator**) and the voice AI that a
 | You use | Voice platform | Status | Start here |
 |---|---|---|---|
 | **Grok Bot** (recommended) | xAI Grok Voice Agent Builder | Live at one business, on two main lines. Built-in Gmail alerts | The **Add** button above, then the [Quick start](#quick-start) |
-| **ChatGPT** (a dot, a project or a regular chat) | Retell AI | New. Written from OpenAI's and Retell's docs, not yet tested by us. Email alerts need Zapier or n8n | [operators/chatgpt-dot/INSTRUCTIONS.md](operators/chatgpt-dot/INSTRUCTIONS.md) |
+| **ChatGPT** (a dot, a project or a regular chat) | Retell AI | Browser path tested: text, basic web voice, one Zapier email to inbox. Telephone acceptance still pending | [operators/chatgpt-dot/INSTRUCTIONS.md](operators/chatgpt-dot/INSTRUCTIONS.md) |
 | **Claude** (claude.ai, Claude Desktop, Claude Code) or another MCP assistant | Retell AI | New, not yet tested by us. Email alerts need Zapier or n8n | [operators/claude](operators/claude/README.md) |
 | No assistant | Either | | [platforms/](platforms/README.md) |
 
@@ -151,13 +151,13 @@ Answering Machina packages everything we learned into a kit you can reuse for yo
 Prices change, so check the links before you decide. These services set things up for you and bundle features this kit doesn't have. With this kit, the tradeoff for the lower per-call cost is the owner's time for setup and review. The full fact-check, with the math, is in [docs/research/pricing-factcheck.md](docs/research/pricing-factcheck.md).
 
 ## Works with
-- **Voice AI**: xAI's Grok Voice Agent Builder (tested). **Retell AI** is documented from Retell's public docs but not yet tested by us (see [platforms/retell](platforms/retell/README.md)).
-- **AI assistant**: built for Grok Bot on xAI. For Retell, ChatGPT (with or without a dot) through Retell's ChatGPT app, or Claude and other MCP clients through Retell's MCP server (see [operators/](operators/README.md)); neither tested end to end yet. Manual use is supported (see [Manual use](#manual-use-without-grok-bot) for xAI, or the [Retell guide](platforms/retell/README.md)).
+- **Voice AI**: xAI's Grok Voice Agent Builder (tested). **Retell AI** passed isolated text, basic web voice and one Zapier email delivery test; production telephone acceptance remains unverified (see [platforms/retell](platforms/retell/README.md)).
+- **AI assistant**: built for Grok Bot on xAI. For Retell, ChatGPT (with or without a dot) through Retell's ChatGPT app, or Claude and other MCP clients through Retell's MCP server (see [operators/](operators/README.md)); plugin/MCP management paths remain unverified; the [ChatGPT browser walkthrough](operators/chatgpt-dot/TESTED-WALKTHROUGH.md) was tested. Manual use is supported (see [Manual use](#manual-use-without-grok-bot) for xAI, or the [Retell guide](platforms/retell/README.md)).
 - **Phone systems**: anything that can forward calls to an outside number. Tested on a NetSapiens-based hosted PBX. Setup steps are documented, but not yet tested by us, for Google Voice for Google Workspace, RingCentral, and AT&T, Verizon and T-Mobile conditional forwarding (see [docs/phone-systems.md](docs/phone-systems.md)). The free personal Google Voice can't forward to the agent, because forwarding needs a verification code step the agent can't complete.
 
 ## Known limits
 - **Early release (v0.1).** One real deployment so far (one business, two locations). Expect rough edges.
-- **Retell support is untested.** xAI is the only platform running on a real line. The Retell guide and the ChatGPT and Claude operator instructions come from public docs and list open "TODO: verify" items. Retell also has no built-in email tool, so in-call alerts need a third-party automation account, Zapier or n8n (see [platforms/retell](platforms/retell/README.md#7-email-alerts-during-a-call)).
+- **Retell has limited test coverage.** xAI is the only platform running on a real line. Retell passed selected text tests, a basic web voice conversation and one synthetic email delivered through Zapier; see the [sanitized report](operators/chatgpt-dot/TEST-REPORT-2026-10-01.md). Telephone acceptance and failure/isolation tests remain open, as do plugin/Claude capabilities. Retell also has no built-in email tool, so in-call alerts need a third-party automation account, Zapier or n8n (see [platforms/retell](platforms/retell/README.md#7-email-alerts-during-a-call)).
 - **No live transfers yet.** The receptionist takes messages instead of connecting callers to staff. The **business-hours-mode** playbook describes optional daytime transfers, but we haven't tested them.
 - **English only.** We've only tested English. The template tells the agent to reply in the caller's language if it can, so check that line in the Instructions first, and test any other language before you rely on it.
 - **Answers only from its knowledge base** (the Key facts block plus the uploaded files). Everything else becomes a message.

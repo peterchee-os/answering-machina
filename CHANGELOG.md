@@ -2,6 +2,14 @@
 
 All notable changes to Answering Machina are listed here.
 
+## 2026-10-01: tested ChatGPT browser setup and controlled email delivery
+
+- Added a Chrome-based Retell/Zapier walkthrough with exact URL and Authorization header fields, credential handoff, restricted email action settings and staged verification.
+- Added consistent no-delivery and one-email test modes. Removed the instruction to preserve email promises in no-alert Urgent/Guardrails/Wrap-up sections.
+- First tests now use an unpublished draft, Manual Chat and web voice without buying a number. Telephone acceptance remains required before live routing.
+- Corrected F1–F4 setup: a permanently broken token cannot prove transient recovery or recipient isolation.
+- Added a sanitized report distinguishing observed text/web/email passes from untested production, failure and permission-scope behavior. No deployment credentials or account identifiers included.
+
 ## 2026-09-30: day one at both locations (docs only)
 
 Follow-up wording fixes the same night: the Retell route is described as documented rather than working, the recap email is labeled as an experiment outside the kit, and the console-gap lesson no longer calls email the record of truth.
