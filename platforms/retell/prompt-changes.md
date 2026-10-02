@@ -1,6 +1,6 @@
 # Retell: changes to templates/prompt.md
 
-Start from [`templates/prompt.md`](../../templates/prompt.md) (or your filled-in `prompt.md`) and make only these edits. Everything else, including every guardrail, stays word for word. Then paste the result into the Retell agent's prompt box. Background for each change is in the [Retell guide](README.md).
+Start from [`templates/prompt.md`](../../templates/prompt.md) (or your filled-in `prompt.md`) and make only these edits. For the production alert-enabled configuration, preserve the remaining guardrails. For an isolated test, apply the complete [test-mode adaptation](test-modes.md) across the prompt, greeting and knowledge base; the no-delivery mode must also remove sending instructions and follow-up promises outside Email policy. Then paste the result into the Retell agent's prompt box. Background for each change is in the [Retell guide](README.md).
 
 Replace `America/Chicago` below with your own IANA time zone name (for example `America/New_York` or `America/Denver`). It must match the zone your hours are in.
 
@@ -54,9 +54,10 @@ Replace the **Knowledge base** line with:
 
 Retell retrieves knowledge-base text before every reply and adds it to the prompt under that heading ([knowledge base](https://docs.retellai.com/build/knowledge-base)), so there is no search step.
 
-Keep the **end_call** line, matching the name of the End Call function in your agent (TODO: verify the default name; Retell's docs call the tool type `end_call`).
+Keep the **end_call** line, matching the name of the End Call function in your agent (verified as `end_call` in our 2026-10-01 test).
 
-## 5. Nothing else
-- Role, Key facts, Objective, Style, Urgent calls, Guardrails & Escalation and Wrap-up stay as they are.
+## 5. Production configuration and isolated tests
+- For a production alert-enabled configuration, Role, Key facts, Objective, Style, Urgent calls, Guardrails & Escalation and Wrap-up stay as they are.
+- For no-delivery or one-email tests, follow [test-modes.md](test-modes.md) instead of preserving contradictory sections word for word. Review Urgent calls, Guardrails & Escalation, Tools and Wrap-up as well as Email policy. Preserve emergency and privacy protections.
 - The Welcome message is not part of the prompt. Paste `welcome.txt` into **Welcome Message → AI speaks first → Custom message**.
 - Keep the prompt as short as your facts allow. Retell bills extra once the full context passes 4,000 tokens ([billing exceptions](https://docs.retellai.com/accounts/billing-exceptions)).
