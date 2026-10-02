@@ -18,7 +18,7 @@ Pick the AI assistant you already use (the **operator**) and the voice AI that a
 | You use | Voice platform | Status | Start here |
 |---|---|---|---|
 | **Grok Bot** (recommended) | xAI Grok Voice Agent Builder | Live at one business, on two main lines. Built-in Gmail alerts | The **Add** button above, then the [Quick start](#quick-start) |
-| **ChatGPT** (a dot, a project or a regular chat) | Retell AI | Browser path tested: text, basic web voice, one Zapier email to inbox. Telephone acceptance still pending | [operators/chatgpt-dot/INSTRUCTIONS.md](operators/chatgpt-dot/INSTRUCTIONS.md) |
+| **ChatGPT** (a dot, a project or a regular chat) | Retell AI | Tested in the browser: text, basic web voice, one Zapier email that reached the inbox. Phone tests still to do | [operators/chatgpt-dot/INSTRUCTIONS.md](operators/chatgpt-dot/INSTRUCTIONS.md) |
 | **Claude** (claude.ai, Claude Desktop, Claude Code) or another MCP assistant | Retell AI | New, not yet tested by us. Email alerts need Zapier or n8n | [operators/claude](operators/claude/README.md) |
 | No assistant | Either | | [platforms/](platforms/README.md) |
 
@@ -48,7 +48,7 @@ Tess now answers the main lines at both our locations, Seattle and Redmond, in t
 - sends an urgent alert email when a call can't wait, like a member locked out of the building, and says the team has been alerted only after that email actually sends,
 - tells anyone in danger to hang up and dial 911.
 
-She doesn't transfer calls yet.
+She didn't transfer calls at first. As of 2026-10-01, she's set up to transfer daytime tour requests to the location manager after emailing the details to the team; that hasn't been tested on a real call yet.
 
 Next, we'll round out what she knows, let her route calls to the right person, and look at our door call boxes (see [Next: door call boxes](#next-door-call-boxes)).
 
@@ -151,14 +151,14 @@ Answering Machina packages everything we learned into a kit you can reuse for yo
 Prices change, so check the links before you decide. These services set things up for you and bundle features this kit doesn't have. With this kit, the tradeoff for the lower per-call cost is the owner's time for setup and review. The full fact-check, with the math, is in [docs/research/pricing-factcheck.md](docs/research/pricing-factcheck.md).
 
 ## Works with
-- **Voice AI**: xAI's Grok Voice Agent Builder (tested). **Retell AI** passed isolated text, basic web voice and one Zapier email delivery test; production telephone acceptance remains unverified (see [platforms/retell](platforms/retell/README.md)).
-- **AI assistant**: built for Grok Bot on xAI. For Retell, ChatGPT (with or without a dot) through Retell's ChatGPT app, or Claude and other MCP clients through Retell's MCP server (see [operators/](operators/README.md)); plugin/MCP management paths remain unverified; the [ChatGPT browser walkthrough](operators/chatgpt-dot/TESTED-WALKTHROUGH.md) was tested. Manual use is supported (see [Manual use](#manual-use-without-grok-bot) for xAI, or the [Retell guide](platforms/retell/README.md)).
+- **Voice AI**: xAI's Grok Voice Agent Builder (tested). **Retell AI** passed text tests, a basic web voice test and one Zapier email test on a separate test agent; phone tests for real calls are still to do (see [platforms/retell](platforms/retell/README.md)).
+- **AI assistant**: built for Grok Bot on xAI. For Retell, ChatGPT (with or without a dot) through Retell's ChatGPT app, or Claude and other MCP clients through Retell's MCP server (see [operators/](operators/README.md)). We haven't tested running Retell through the plugin or MCP server, but we did test the [ChatGPT browser walkthrough](operators/chatgpt-dot/TESTED-WALKTHROUGH.md). Manual use is supported (see [Manual use](#manual-use-without-grok-bot) for xAI, or the [Retell guide](platforms/retell/README.md)).
 - **Phone systems**: anything that can forward calls to an outside number. Tested on a NetSapiens-based hosted PBX. Setup steps are documented, but not yet tested by us, for Google Voice for Google Workspace, RingCentral, and AT&T, Verizon and T-Mobile conditional forwarding (see [docs/phone-systems.md](docs/phone-systems.md)). The free personal Google Voice can't forward to the agent, because forwarding needs a verification code step the agent can't complete.
 
 ## Known limits
 - **Early release (v0.1).** One real deployment so far (one business, two locations). Expect rough edges.
-- **Retell has limited test coverage.** xAI is the only platform running on a real line. Retell passed selected text tests, a basic web voice conversation and one synthetic email delivered through Zapier; see the [sanitized report](operators/chatgpt-dot/TEST-REPORT-2026-10-01.md). Telephone acceptance and failure/isolation tests remain open, as do plugin/Claude capabilities. Retell also has no built-in email tool, so in-call alerts need a third-party automation account, Zapier or n8n (see [platforms/retell](platforms/retell/README.md#7-email-alerts-during-a-call)).
-- **No live transfers yet.** The receptionist takes messages instead of connecting callers to staff. The **business-hours-mode** playbook describes optional daytime transfers, but we haven't tested them.
+- **Retell has limited test coverage.** xAI is the only platform running on a real line. Retell passed some text tests, a basic web voice conversation and one fake test email sent through Zapier; see the [test report](operators/chatgpt-dot/TEST-REPORT-2026-10-01.md). Phone tests and the failure and isolation tests are still open, and so is what the plugin and Claude routes can do. Retell also has no built-in email tool, so in-call alerts need a third-party automation account, Zapier or n8n (see [platforms/retell](platforms/retell/README.md#7-email-alerts-during-a-call)).
+- **Transfers are new and untested.** As of 2026-10-01, our own deployment (on xAI) has daytime transfers turned on for tour requests only, to the location manager, Monday to Friday 8:00 AM to 3:59 PM. The AI first emails the tour details to the team, then transfers the call. We haven't tested this on a real call yet. The **business-hours-mode** playbook describes optional daytime transfers. The kit's after-hours default is still to take a message.
 - **English only.** We've only tested English. The template tells the agent to reply in the caller's language if it can, so check that line in the Instructions first, and test any other language before you rely on it.
 - **Answers only from its knowledge base** (the Key facts block plus the uploaded files). Everything else becomes a message.
 - **A call can fail silently if your xAI credit runs out.** Turn on auto top-up in the xAI console's billing settings, or set up a low-credit check, and do the daily health check in the [go-live checklist](docs/go-live-checklist.md).

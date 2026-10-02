@@ -2,13 +2,15 @@
 
 All notable changes to Answering Machina are listed here.
 
-## 2026-10-01: tested ChatGPT browser setup and controlled email delivery
+## 2026-10-01: tested ChatGPT browser setup and one controlled test email
 
-- Added a Chrome-based Retell/Zapier walkthrough with exact URL and Authorization header fields, credential handoff, restricted email action settings and staged verification.
-- Added consistent no-delivery and one-email test modes. Removed the instruction to preserve email promises in no-alert Urgent/Guardrails/Wrap-up sections.
-- First tests now use an unpublished draft, Manual Chat and web voice without buying a number. Telephone acceptance remains required before live routing.
-- Corrected F1–F4 setup: a permanently broken token cannot prove transient recovery or recipient isolation.
-- Added a sanitized report distinguishing observed text/web/email passes from untested production, failure and permission-scope behavior. No deployment credentials or account identifiers included.
+Follow-up the same day: plain-language pass on the ChatGPT/Retell tested pages, with no change in facts; Known limits now notes the first (untested) daytime tour transfers.
+
+- Added a Chrome-based Retell/Zapier walkthrough with the exact URL and Authorization header fields, how the owner handles the token, the locked-down email action settings, and how to check each step.
+- Added two matching test modes: no delivery, and one email. Removed the instruction to keep email promises in the Urgent, Guardrails and Wrap-up sections when there are no alerts.
+- First tests now use an unpublished draft, Manual Chat and web voice, without buying a number. Phone tests are still required before routing live calls.
+- Fixed the F1–F4 setup: a token that's always broken can't prove recovery from a one-time failure or recipient isolation.
+- Added a test report, with private details removed, that separates the text, web and email tests that passed from what's untested: real calls, failures and permission scopes. It includes no deployment credentials or account identifiers.
 
 ## 2026-09-30: day one at both locations (docs only)
 
